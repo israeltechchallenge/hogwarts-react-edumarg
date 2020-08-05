@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import {
   BrowserRouter as Router,
@@ -11,7 +10,7 @@ import NavBar from "./components/navBar";
 import MainPage from "./components/mainPage";
 import LogIn from "./components/adminLogin";
 import SignUp from "./components/adminSignup";
-import Student from "./components/Student";
+import Student from "./components/student";
 import NotFound from "./components/notFound";
 
 function App() {
@@ -23,10 +22,7 @@ function App() {
           <Route path="/home" render={(props) => <MainPage {...props} />} />
           <Route path="/signup" render={(props) => <SignUp {...props} />} />
           <Route path="/login" render={(props) => <LogIn {...props} />} />
-          <Route
-            path="student/:id"
-            render={(props) => <Student {...props} />}
-          />
+          <Route path="/student" render={(props) => <Student {...props} />} />
           <Route path="/not-found" component={NotFound} />
           <Redirect from="/" exact to="/home" />
           <Redirect from="/" to="/not-found" />
