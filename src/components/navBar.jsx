@@ -19,23 +19,20 @@ class NavBar extends Component {
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div className="navbar-nav d-flex flex-row justify-content-between">
-              <div className="d-flex flex-row">
-                <NavLink className="nav-item nav-link" to="/home">
-                  Home
-                </NavLink>
-                <NavLink className="nav-item nav-link" to="/student">
-                  Add student
-                </NavLink>
-              </div>
-              <div className="d-flex flex-row">
-                <NavLink className="nav-item nav-link" to="/signup">
-                  Signup
-                </NavLink>
-                <NavLink className="nav-item nav-link" to="/login">
-                  Login
-                </NavLink>
-              </div>
+            <div className="navbar-nav">
+              <NavLink className="nav-item nav-link" to="/home">
+                Home
+              </NavLink>
+              <NavLink className="nav-item nav-link" to="/student">
+                Add student
+              </NavLink>
+
+              <NavLink className="nav-item nav-link" to="/signup">
+                Signup
+              </NavLink>
+              <NavLink className="nav-item nav-link" to="/login">
+                Login
+              </NavLink>
             </div>
           </div>
         </nav>
