@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-
-class NavBar extends Component {
+class SignUp extends Component {
     state = {  }
     render() { 
         return (  );
     }
 }
  
-export default NavBar;
+export default SignUp;
