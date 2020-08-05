@@ -6,7 +6,7 @@ class NavBar extends Component {
   render() {
     return (
       <React.Fragment>
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+        <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
           <button
             className="navbar-toggler"
             type="button"
@@ -20,7 +20,7 @@ class NavBar extends Component {
           </button>
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav d-flex flex-row justify-content-between">
-              <div>
+              <div className="d-flex flex-row">
                 <NavLink className="nav-item nav-link" to="/home">
                   Home
                 </NavLink>
@@ -28,7 +28,7 @@ class NavBar extends Component {
                   Add student
                 </NavLink>
               </div>
-              <div>
+              <div className="d-flex flex-row">
                 <NavLink className="nav-item nav-link" to="/signup">
                   Signup
                 </NavLink>
