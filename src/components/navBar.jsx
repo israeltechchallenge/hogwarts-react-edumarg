@@ -34,6 +34,7 @@ class NavBar extends Component {
                 Login
               </NavLink>
             </div>
+            <span className="navbar-text ml-auto">Loged In as....</span>
           </div>
         </nav>
       </React.Fragment>
