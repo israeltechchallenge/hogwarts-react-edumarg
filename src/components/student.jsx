@@ -60,6 +60,7 @@ class Student extends Component {
                 id="firstName"
                 name="firstName"
                 value={student.firstName}
+                onChange={() => this.handleChange()}
               />
             </div>
 
@@ -71,6 +72,7 @@ class Student extends Component {
                 id="lastName"
                 name="lastName"
                 value={student.lastName}
+                onChange={() => this.handleChange()}
               />
             </div>
 
@@ -82,6 +84,7 @@ class Student extends Component {
                 id="email"
                 name="email"
                 value={student.email}
+                onChange={() => this.handleChange()}
               />
             </div>
 
