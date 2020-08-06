@@ -1,17 +1,20 @@
 import React, { Component } from "react";
 
 class SignUp extends Component {
-  state = {
-    admin: {
-      id: "",
-      firstName: "",
-      lastName: "",
-      email: "",
-      password1: "",
-      password2: "",
-    },
-    errors: {},
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      admin: {
+        id: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        passwordConfirm: "",
+      },
+      errors: {},
+    };
+  }
 
   handleChange(event) {
     const admin = { ...this.state.admin };
@@ -24,9 +27,14 @@ class SignUp extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.OnNewAdmin(this.state.admin);
-    event.target.reset();
-    this.props.history.replace("/home");
+    if (this.state.password === this.state.passwordConfirm) {
+      this.props.OnNewAdmin(this.state.admin);
+      event.target.reset();
+      this.props.history.replace("/home");
+    } else
+      alert(
+        `Password do not match, plase make sure both paswords are the same`
+      );
   }
 
   render() {
@@ -74,13 +82,13 @@ class SignUp extends Component {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password1">Password</label>
+              <label htmlFor="password">Password</label>
               <input
                 type="password"
                 className="form-control"
-                value={admin.password1}
-                id="password1"
-                name="password1"
+                value={admin.password}
+                id="password"
+                name="password"
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
@@ -90,9 +98,9 @@ class SignUp extends Component {
               <input
                 type="password"
                 className="form-control"
-                value={admin.password2}
-                id="password2"
-                name="password2"
+                value={admin.passwordConfirm}
+                id="passwordConfirm"
+                name="passwordConfirm"
                 onChange={(event) => this.handleChange(event)}
               />
             </div>

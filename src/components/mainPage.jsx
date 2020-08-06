@@ -98,9 +98,9 @@ class MainPage extends Component {
             </React.Fragment>
           )}
           {!this.props.currentAdmin && (
-            <div className="col d-flex flex-column m-auto justify-content-center align-items-center">
+            <div className="col d-flex flex-column m-auto justify-content-center align-items-center text-md-center">
               <h1>
-                Welcome, please Login or sign up to view and edit students
+                Welcome, please Log In or Sign Up to view and edit students
               </h1>
             </div>
           )}

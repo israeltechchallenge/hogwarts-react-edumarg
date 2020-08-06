@@ -13,7 +13,7 @@ import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
 
-const mockStudents = [
+let mockStudents = [
   {
     id: "1a2b3c4e",
     firstName: "Harry",
@@ -88,7 +88,7 @@ const mockStudents = [
   },
 ];
 
-const mockAdmins = [
+let mockAdmins = [
   {
     id: "mastoideo",
     firstName: "Edu",
@@ -105,7 +105,20 @@ class App extends Component {
     currentAdmin: "",
   };
 
-  handleLogin() {}
+  handleLogin(account) {
+    for (let admin of this.state.admins) {
+      if (
+        admin.email.toLowerCase() === account.email.toLowerCase() &&
+        admin.password === account.password
+      ) {
+        this.setState({ currentAdmin: admin });
+        alert("Log In success");
+        return;
+      }
+    }
+    alert("login fail");
+  }
+
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
@@ -147,7 +160,16 @@ class App extends Component {
                 />
               )}
             />
-            <Route path="/login" render={(props) => <LogIn {...props} />} />
+            <Route
+              path="/login"
+              render={(props) => (
+                <LogIn
+                  {...props}
+                  onLogin={(account) => this.handleLogin(account)}
+                  currentAdmin={this.state.currentAdmin}
+                />
+              )}
+            />
             <Route
               path="/student"
               render={(props) => (
