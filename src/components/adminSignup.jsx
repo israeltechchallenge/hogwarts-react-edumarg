@@ -1,59 +1,103 @@
 import React, { Component } from "react";
+
 class SignUp extends Component {
-  state = {};
+  state = {
+    admin: {
+      id: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      password1: "",
+      password2: "",
+    },
+    errors: {},
+  };
+
+  handleChange(event) {
+    const admin = { ...this.state.admin };
+    const now = new Date();
+    const id = now - new Date("1981-05-20");
+    admin.id = id;
+    admin[event.target.name] = event.target.value;
+    this.setState({ admin });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.OnNewAdmin(this.state.admin);
+    event.target.reset();
+    this.props.history.replace("/home");
+  }
+
   render() {
+    const { admin, errors } = this.state;
     return (
       <React.Fragment>
         <div className="col-md-10 mx-auto">
-          <h2 className="my-3">Admin Signup</h2>
+          <h2 className="my-3">Admin Sign Up</h2>
 
-          <form>
+          <form onSubmit={(event) => this.handleSubmit(event)}>
             <div className="form-group">
-              <label htmlFor="InputFirstName">First Name</label>
+              <label htmlFor="firstName">First Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="InputFirstName"
-                name="InputFirstName"
+                id="firstName"
+                name="firstName"
+                value={admin.firstName}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
+
             <div className="form-group">
-              <label htmlFor="InputLastName">Last Name</label>
+              <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="InputLastName"
-                name="InputLastName"
+                id="lastName"
+                name="lastName"
+                value={admin.lastName}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
+
             <div className="form-group">
-              <label htmlFor="InputEmail">Email address</label>
+              <label htmlFor="email">Email address</label>
               <input
                 type="email"
                 className="form-control"
-                id="InputEmail"
-                name="InputEmail"
+                id="email"
+                name="email"
+                value={admin.email}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
+
             <div className="form-group">
-              <label htmlFor="InputPassword1">Password</label>
+              <label htmlFor="password1">Password</label>
               <input
                 type="password"
                 className="form-control"
-                id="InputPassword1"
-                name="InputPassword1"
+                value={admin.password1}
+                id="password1"
+                name="password1"
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
+
             <div className="form-group">
-              <label htmlFor="InputPassword2">Repeat Password</label>
+              <label htmlFor="password2">Password Confirmation</label>
               <input
                 type="password"
                 className="form-control"
-                id="InputPassword2"
-                name="InputPassword2"
+                value={admin.password2}
+                id="password2"
+                name="password2"
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
-            <button type="submit" className="btn btn-primary">
+
+            <button type="submit" className="btn btn-primary my-2">
               Submit
             </button>
           </form>

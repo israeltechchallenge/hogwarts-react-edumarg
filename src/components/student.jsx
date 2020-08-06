@@ -1,7 +1,38 @@
 import React, { Component } from "react";
 import SkillsTable from "./skillsTable";
+
 class Student extends Component {
-  state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      student: {
+        id: "",
+        firstName: "",
+        lastName: "",
+        email: "",
+        currentSkills: {
+          potionMaking: "",
+          spells: "",
+          quidditch: "",
+          animagus: "",
+          apparate: "",
+          metamorphmagi: "",
+          parcelongue: "",
+        },
+        desierSkills: {
+          potionMaking: "",
+          spells: "",
+          quidditch: "",
+          animagus: "",
+          apparate: "",
+          metamorphmagi: "",
+          parcelongue: "",
+        },
+      },
+      errors: {},
+    };
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -9,32 +40,32 @@ class Student extends Component {
           <h2 className="my-3">Student</h2>
           <form>
             <div className="form-group">
-              <label htmlFor="InputFirstName">First Name</label>
+              <label htmlFor="firstName">First Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="InputFirstName"
-                name="InputFirstName"
+                id="firstName"
+                name="firstName"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="InputLastName">Last Name</label>
+              <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
                 className="form-control"
-                id="InputLastName"
-                name="InputLastName"
+                id="lastName"
+                name="lastName"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="InputEmail">Email address</label>
+              <label htmlFor="email">Email address</label>
               <input
                 type="email"
                 className="form-control"
-                id="InputEmail"
-                name="InputEmail"
+                id="email"
+                name="email"
               />
             </div>
 

@@ -8,6 +8,7 @@ class NavBar extends Component {
   }
 
   render() {
+    const { currentAdmin } = this.props;
     return (
       <React.Fragment>
         <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
@@ -27,33 +28,35 @@ class NavBar extends Component {
               <NavLink className="nav-item nav-link" to="/home">
                 Home
               </NavLink>
-              <NavLink className="nav-item nav-link" to="/student">
-                Add student
-              </NavLink>
-              {!this.props.currentAdmin && (
-                <NavLink className="nav-item nav-link" to="/login">
-                  Login
+              {currentAdmin && (
+                <NavLink className="nav-item nav-link" to="/student">
+                  Add student
                 </NavLink>
               )}
-              {!this.props.currentAdmin && (
+              {!currentAdmin && (
+                <NavLink className="nav-item nav-link" to="/login">
+                  Log In
+                </NavLink>
+              )}
+              {!currentAdmin && (
                 <NavLink className="nav-item nav-link" to="/signup">
                   Sign Up
                 </NavLink>
               )}
               )
-              {this.props.currentAdmin && (
+              {currentAdmin && (
                 <NavLink
                   className="nav-item nav-link"
                   onClick={this.props.handleLogOut}
                   to="/home"
                 >
-                  Logout
+                  Log Out
                 </NavLink>
               )}
             </div>
-            {this.props.currentAdmin && (
+            {currentAdmin && (
               <span className="navbar-text ml-auto">
-                Loged In as {this.props.currentAdmin}
+                Loged In as {currentAdmin.firstName} {currentAdmin.lastName}
               </span>
             )}
           </div>

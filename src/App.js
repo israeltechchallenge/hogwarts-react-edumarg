@@ -90,7 +90,7 @@ const mockStudents = [
 
 const mockAdmins = [
   {
-    id: "a1b2c3d4",
+    id: "mastoideo",
     firstName: "Edu",
     lastName: "Marg",
     email: "edu@mail.com",
@@ -102,15 +102,22 @@ class App extends Component {
   state = {
     students: mockStudents,
     admins: mockAdmins,
-    currentAdmin: "Edu",
+    currentAdmin: "",
   };
 
   handleLogin() {}
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
-  handleNewAdmin() {}
-  handleNewStudent() {}
+  handleNewAdmin(newAdmin) {
+    let newAdmins = [...this.state.admins];
+    newAdmins = [newAdmin, ...newAdmins];
+    mockAdmins = newAdmins;
+    this.setState({ admins: newAdmins });
+  }
+  handleNewStudent(newStudent) {
+    console.log("hande new student", newStudent);
+  }
 
   render() {
     return (
@@ -131,9 +138,27 @@ class App extends Component {
                 />
               )}
             />
-            <Route path="/signup" render={(props) => <SignUp {...props} />} />
+            <Route
+              path="/signup"
+              render={(props) => (
+                <SignUp
+                  {...props}
+                  OnNewAdmin={(newAdmin) => this.handleNewAdmin(newAdmin)}
+                />
+              )}
+            />
             <Route path="/login" render={(props) => <LogIn {...props} />} />
-            <Route path="/student" render={(props) => <Student {...props} />} />
+            <Route
+              path="/student"
+              render={(props) => (
+                <Student
+                  {...props}
+                  onNewStudent={(newStudent) =>
+                    this.handleNewStudent(newStudent)
+                  }
+                />
+              )}
+            />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/home" />
             <Redirect from="/" to="/not-found" />

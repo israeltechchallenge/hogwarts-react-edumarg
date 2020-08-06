@@ -21,6 +21,7 @@ class MainPage extends Component {
               <table className="table">
                 <thead className="thead-dark">
                   <tr>
+                    <th scope="col">#</th>
                     <th scope="col">First</th>
                     <th scope="col">Last</th>
                     <th scope="col">Email</th>
@@ -33,6 +34,9 @@ class MainPage extends Component {
                 <tbody>
                   {this.state.students.map((student) => (
                     <tr key={student.id}>
+                      <th scope="row">
+                        {this.state.students.indexOf(student) + 1}
+                      </th>
                       <td>{student.firstName}</td>
                       <td>{student.lastName}</td>
                       <td>{student.email}</td>
@@ -46,7 +50,7 @@ class MainPage extends Component {
                           </thead>
                           <tbody>
                             {Object.keys(student.currentSkills).map((skill) => (
-                              <tr>
+                              <tr key={`current${skill}`}>
                                 <td>{skill}</td>
                                 <td>{student.currentSkills[skill]}</td>
                               </tr>
@@ -66,7 +70,7 @@ class MainPage extends Component {
                           </thead>
                           <tbody>
                             {Object.keys(student.desierSkills).map((skill) => (
-                              <tr>
+                              <tr key={`desier${skill}`}>
                                 <td>{skill}</td>
                                 <td>{student.desierSkills[skill]}</td>
                               </tr>

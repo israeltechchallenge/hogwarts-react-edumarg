@@ -1,20 +1,23 @@
 import React, { Component } from "react";
+
 class Login extends Component {
-  state = {};
+  state = {
+    acount: {
+      email: "",
+      password: "",
+    },
+    errors: {},
+  };
+
   render() {
     return (
       <React.Fragment>
         <div className="col-md-10 mx-auto">
-          <h2 className="my-3">Admin Login</h2>
-          <form>
+          <h2 className="my-3">Admin Log In</h2>
+          <form onSubmit={() => this.handleSubmit()}>
             <div className="form-group">
               <label htmlFor="InputEmail">Email address</label>
-              <input
-                type="email"
-                className="form-control"
-                id="InputEmail"
-                aria-describedby="emailHelp"
-              />
+              <input type="email" className="form-control" id="InputEmail" />
             </div>
             <div className="form-group">
               <label htmlFor="InputPassword">Password</label>
