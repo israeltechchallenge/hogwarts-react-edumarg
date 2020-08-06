@@ -82,12 +82,19 @@ class MainPage extends Component {
                         <button
                           type="button"
                           className="btn btn-sm btn-warning"
+                          // onClick={this.props.history.replace(
+                          //   `/student/${student.id}`
+                          // )}
                         >
                           Edit
                         </button>
                       </td>
                       <td>
-                        <button type="button" className="btn btn-sm btn-danger">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger"
+                          onClick={() => this.props.onDelete(student)}
+                        >
                           Delete
                         </button>
                       </td>

@@ -100,10 +100,14 @@ let mockAdmins = [
 
 class App extends Component {
   state = {
-    students: mockStudents,
-    admins: mockAdmins,
+    students: "",
+    admins: "",
     currentAdmin: "",
   };
+
+  componentDidMount() {
+    this.setState({ students: mockStudents, admins: mockAdmins });
+  }
 
   handleLogin(account) {
     for (let admin of this.state.admins) {
@@ -130,6 +134,18 @@ class App extends Component {
   }
   handleNewStudent(newStudent) {
     console.log("hande new student", newStudent);
+    let newStudents = [...this.state.students];
+    newStudents = [newStudent, ...newStudents];
+    this.setState({ students: newStudents });
+  }
+
+  handleDeleteStudent(studentToDelete) {
+    const orignalStudent = [...this.state.students];
+    const newStudents = orignalStudent.filter(
+      (student) => student.id !== studentToDelete.id
+    );
+    mockStudents = newStudents;
+    this.setState({ students: newStudents });
   }
 
   render() {
@@ -147,6 +163,7 @@ class App extends Component {
                 <MainPage
                   students={this.state.students}
                   currentAdmin={this.state.currentAdmin}
+                  onDelete={(student) => this.handleDeleteStudent(student)}
                   {...props}
                 />
               )}
