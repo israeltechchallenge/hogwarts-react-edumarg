@@ -13,7 +13,7 @@ import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
 
-const mockStudents = [
+let mockStudents = [
   {
     id: "1a2b3c4e",
     firstName: "Harry",
@@ -88,7 +88,7 @@ const mockStudents = [
   },
 ];
 
-const mockAdmins = [
+let mockAdmins = [
   {
     id: "mastoideo",
     firstName: "Edu",
@@ -100,12 +100,29 @@ const mockAdmins = [
 
 class App extends Component {
   state = {
-    students: mockStudents,
-    admins: mockAdmins,
+    students: "",
+    admins: "",
     currentAdmin: "",
   };
 
-  handleLogin() {}
+  componentDidMount() {
+    this.setState({ students: mockStudents, admins: mockAdmins });
+  }
+
+  handleLogin(account) {
+    for (let admin of this.state.admins) {
+      if (
+        admin.email.toLowerCase() === account.email.toLowerCase() &&
+        admin.password === account.password
+      ) {
+        this.setState({ currentAdmin: admin });
+        alert("Log In success");
+        return;
+      }
+    }
+    alert("login fail");
+  }
+
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
@@ -117,6 +134,18 @@ class App extends Component {
   }
   handleNewStudent(newStudent) {
     console.log("hande new student", newStudent);
+    let newStudents = [...this.state.students];
+    newStudents = [newStudent, ...newStudents];
+    this.setState({ students: newStudents });
+  }
+
+  handleDeleteStudent(studentToDelete) {
+    const orignalStudent = [...this.state.students];
+    const newStudents = orignalStudent.filter(
+      (student) => student.id !== studentToDelete.id
+    );
+    mockStudents = newStudents;
+    this.setState({ students: newStudents });
   }
 
   render() {
@@ -134,6 +163,7 @@ class App extends Component {
                 <MainPage
                   students={this.state.students}
                   currentAdmin={this.state.currentAdmin}
+                  onDelete={(student) => this.handleDeleteStudent(student)}
                   {...props}
                 />
               )}
@@ -147,7 +177,16 @@ class App extends Component {
                 />
               )}
             />
-            <Route path="/login" render={(props) => <LogIn {...props} />} />
+            <Route
+              path="/login"
+              render={(props) => (
+                <LogIn
+                  {...props}
+                  onLogin={(account) => this.handleLogin(account)}
+                  currentAdmin={this.state.currentAdmin}
+                />
+              )}
+            />
             <Route
               path="/student"
               render={(props) => (

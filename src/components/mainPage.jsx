@@ -82,12 +82,19 @@ class MainPage extends Component {
                         <button
                           type="button"
                           className="btn btn-sm btn-warning"
+                          // onClick={this.props.history.replace(
+                          //   `/student/${student.id}`
+                          // )}
                         >
                           Edit
                         </button>
                       </td>
                       <td>
-                        <button type="button" className="btn btn-sm btn-danger">
+                        <button
+                          type="button"
+                          className="btn btn-sm btn-danger"
+                          onClick={() => this.props.onDelete(student)}
+                        >
                           Delete
                         </button>
                       </td>
@@ -98,9 +105,9 @@ class MainPage extends Component {
             </React.Fragment>
           )}
           {!this.props.currentAdmin && (
-            <div className="col d-flex flex-column m-auto justify-content-center align-items-center">
+            <div className="col d-flex flex-column m-auto justify-content-center align-items-center text-md-center">
               <h1>
-                Welcome, please Login or sign up to view and edit students
+                Welcome, please Log In or Sign Up to view and edit students
               </h1>
             </div>
           )}

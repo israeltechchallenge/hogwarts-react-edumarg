@@ -33,7 +33,20 @@ class Student extends Component {
     };
   }
 
+  handleChange(event) {
+    const account = { ...this.state.account };
+    account[event.target.name] = event.target.value;
+    this.setState({ account });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    this.props.onNewStudent(this.state.student);
+    event.target.reset();
+  }
+
   render() {
+    const { student } = this.state;
     return (
       <React.Fragment>
         <div className="col-md-10 mx-auto">
@@ -46,6 +59,7 @@ class Student extends Component {
                 className="form-control"
                 id="firstName"
                 name="firstName"
+                value={student.firstName}
               />
             </div>
 
@@ -56,6 +70,7 @@ class Student extends Component {
                 className="form-control"
                 id="lastName"
                 name="lastName"
+                value={student.lastName}
               />
             </div>
 
@@ -66,6 +81,7 @@ class Student extends Component {
                 className="form-control"
                 id="email"
                 name="email"
+                value={student.email}
               />
             </div>
 
