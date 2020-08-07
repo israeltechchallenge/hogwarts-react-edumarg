@@ -8,8 +8,24 @@ class Login extends Component {
         email: "",
         password: "",
       },
-      errors: "",
+      errors: {},
     };
+  }
+
+  validate() {
+    const { email, password } = this.state.account;
+    const errors = {};
+
+    if (email.trim() === "") return `Email requiere`;
+    else if (email) {
+      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
+      if (!regex.test(email))
+        return `Invalid email format, please make sure to write a valid email`;
+    }
+
+    if (password.trim() === "") return `Password requiere`;
+
+    return Object.keys(errors).length === 0 ? null : errors;
   }
 
   validateProperty({ name, value }) {
@@ -20,21 +36,9 @@ class Login extends Component {
         if (!regex.test(value))
           return `Invalid email format, please make sure to write a valid email`;
       }
-    }
-    if (name === "password") {
+    } else if (name === "password") {
       if (value.trim() === "") return `Password requiere`;
     }
-  }
-
-  validate() {
-    const { email, password } = this.state.account;
-    if (email.trim() === "") return `Email requiere`;
-    else if (email) {
-      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
-      if (!regex.test(email))
-        return `Invalid email format, please make sure to write a valid email`;
-    } else if (password.trim() === "") return `Password requiere`;
-    else return null;
   }
 
   handleChange(event) {
@@ -45,7 +49,6 @@ class Login extends Component {
 
     const account = { ...this.state.account };
     account[event.target.name] = event.target.value;
-    console.log("errors", errors);
     this.setState({ account, errors });
   }
 
