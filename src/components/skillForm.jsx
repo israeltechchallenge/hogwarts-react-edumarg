@@ -7,7 +7,7 @@ const SkillForm = ({ type, index, ...rest }) => {
         <label htmlFor={`${type}Skill${index}`}>
           <select className="form-control form-control-sm">
             <option defaultValue>Skill...</option>
-            <option value={`${type}Skills[potionMaking]`}>Potion Making</option>
+            <option value="potionMaking">Potion Making</option>
             <option value="spells">Spells</option>
             <option value="quidditch">Quidditch</option>
             <option value="animagus">Animagus</option>

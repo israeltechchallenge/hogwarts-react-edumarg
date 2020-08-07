@@ -166,6 +166,7 @@ class App extends Component {
   }
 
   handleSaveStudent(student) {
+    console.log("new student", student);
     const now = new Date();
     let newStudents = [...this.state.students];
     let studentInDb = newStudents.find((s) => s.id === student.id);

@@ -10,24 +10,8 @@ class Student extends Component {
         firstName: "",
         lastName: "",
         email: "",
-        currentSkills: {
-          potionMaking: "",
-          spells: "",
-          quidditch: "",
-          animagus: "",
-          apparate: "",
-          metamorphmagi: "",
-          parcelongue: "",
-        },
-        desierSkills: {
-          potionMaking: "",
-          spells: "",
-          quidditch: "",
-          animagus: "",
-          apparate: "",
-          metamorphmagi: "",
-          parcelongue: "",
-        },
+        currentSkills: {},
+        desierSkills: {},
       },
       currentSkills: {
         potionMaking: "",
@@ -61,7 +45,6 @@ class Student extends Component {
   }
 
   handleChange(event) {
-    console.log("onchange");
     const student = { ...this.state.student };
     student[event.target.name] = event.target.value;
     this.setState({
@@ -70,7 +53,6 @@ class Student extends Component {
   }
 
   handleOnChangeCurrentSkills(event) {
-    console.log("onchange current", event);
     const currentSkills = { ...this.state.currentSkills };
     currentSkills[event.target.name] = event.target.value;
     this.setState({
@@ -79,7 +61,6 @@ class Student extends Component {
   }
 
   handleOnChangeDesierSkills(event) {
-    console.log("onchange desier", event);
     const desierSkills = { ...this.state.desierSkills };
     desierSkills[event.target.name] = event.target.value;
     this.setState({
@@ -90,9 +71,11 @@ class Student extends Component {
   handleSubmit(event) {
     event.preventDefault();
     let newStudent = { ...this.state.student };
+    console.log("sbumnit student", newStudent);
     newStudent.currentSkills = this.state.currentSkills;
     newStudent.desierSkills = this.state.desierSkills;
-    this.props.onSaveStudent(this.newStudent);
+    console.log("sbumnit compleate student", newStudent);
+    this.props.onSaveStudent(newStudent);
     event.target.reset();
     this.props.history.replace("/home");
   }
