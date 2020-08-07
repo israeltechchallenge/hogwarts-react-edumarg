@@ -43,15 +43,18 @@ class Student extends Component {
   }
 
   handleChange(event) {
-    const account = { ...this.state.account };
-    account[event.target.name] = event.target.value;
-    this.setState({ account });
+    const student = { ...this.state.student };
+    student[event.target.name] = event.target.value;
+    this.setState({
+      student,
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.onNewStudent(this.state.student);
+    this.props.onSaveStudent(this.state.student);
     event.target.reset();
+    this.props.history.replace("/home");
   }
 
   render() {
@@ -60,7 +63,7 @@ class Student extends Component {
       <React.Fragment>
         <div className="col-md-10 mx-auto">
           <h2 className="my-3">Student</h2>
-          <form>
+          <form onSubmit={(event) => this.handleSubmit(event)}>
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
               <input
@@ -69,7 +72,7 @@ class Student extends Component {
                 id="firstName"
                 name="firstName"
                 value={student.firstName}
-                onChange={() => this.handleChange()}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
@@ -81,7 +84,7 @@ class Student extends Component {
                 id="lastName"
                 name="lastName"
                 value={student.lastName}
-                onChange={() => this.handleChange()}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
@@ -93,7 +96,7 @@ class Student extends Component {
                 id="email"
                 name="email"
                 value={student.email}
-                onChange={() => this.handleChange()}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
@@ -108,7 +111,7 @@ class Student extends Component {
               </div>
             </div>
             <button type="submit" className="btn btn-primary mx-3">
-              Submit
+              Save
             </button>
           </form>
         </div>

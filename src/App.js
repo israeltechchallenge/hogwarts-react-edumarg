@@ -19,6 +19,8 @@ let mockStudents = [
     firstName: "Harry",
     lastName: "Potter",
     email: "potter@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "3",
       spells: "3",
@@ -43,6 +45,8 @@ let mockStudents = [
     firstName: "Hermione",
     lastName: "Granger",
     email: "granger@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "5",
       spells: "5",
@@ -67,6 +71,8 @@ let mockStudents = [
     firstName: "Ron",
     lastName: "Weasley",
     email: "rweasley@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "2",
       spells: "2",
@@ -94,6 +100,7 @@ let mockAdmins = [
     firstName: "Edu",
     lastName: "Marg",
     email: "e@mail.com",
+    createdOn: "",
     password: "123",
   },
 ];
@@ -108,8 +115,10 @@ class App extends Component {
   componentWillMount() {
     let currentAccount = localStorage.getItem("currentLogedAdmin");
     currentAccount = JSON.parse(currentAccount);
-    const studentList = localStorage.getItem("studentList");
-    const adminList = localStorage.getItem("adminList");
+    let studentList = localStorage.getItem("studentList");
+    studentList = JSON.parse(studentList);
+    let adminList = localStorage.getItem("adminList");
+    adminList = JSON.parse(adminList);
     this.setState({
       students: studentList || mockStudents,
       admins: adminList || mockAdmins,
@@ -135,19 +144,15 @@ class App extends Component {
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
+
   handleNewAdmin(newAdmin) {
     let newAdmins = [...this.state.admins];
+    const now = Date.now();
+    newAdmin.createdOn = now.toDateString();
     newAdmins = [newAdmin, ...newAdmins];
     mockAdmins = newAdmins;
     this.setState({ admins: newAdmins });
     localStorage.setItem("adminList", JSON.stringify(newAdmins));
-  }
-  handleNewStudent(newStudent) {
-    console.log("hande new student", newStudent);
-    let newStudents = [...this.state.students];
-    newStudents = [newStudent, ...newStudents];
-    this.setState({ students: newStudents });
-    localStorage.setItem("studentList", JSON.stringify(newStudents));
   }
 
   handleDeleteStudent(studentToDelete) {
@@ -160,12 +165,31 @@ class App extends Component {
     localStorage.setItem("studentList", JSON.stringify(newStudents));
   }
 
-  handleEditStudent(student) {
-    return;
+  handleSaveStudent(student) {
+    const now = new Date();
+    let newStudents = [...this.state.students];
+    let studentInDb = newStudents.find((s) => s.id === student.id);
+
+    if (student.id) {
+      const index = newStudents.indexOf(studentInDb);
+      student.lastEdit = now.toDateString();
+      newStudents[index] = { ...student };
+    }
+
+    // new student logic
+    else if (!student.id) {
+      const id = now - new Date("1981-05-20");
+      student.id = id;
+      student.createdOn = now.toDateString();
+      newStudents.push(student);
+    }
+
+    this.setState({ students: newStudents });
+    localStorage.setItem("studentList", JSON.stringify(newStudents));
   }
 
   render() {
-    const { currentAdmin, students, admins } = this.state;
+    const { currentAdmin, students } = this.state;
     return (
       <React.Fragment>
         <Router>
@@ -180,7 +204,6 @@ class App extends Component {
                 <MainPage
                   students={students}
                   currentAdmin={currentAdmin}
-                  editStudent={(student) => this.handleEditStudent(student)}
                   onDelete={(student) => this.handleDeleteStudent(student)}
                   {...props}
                 />
@@ -211,9 +234,7 @@ class App extends Component {
                 <Student
                   {...props}
                   studentList={students}
-                  onNewStudent={(newStudent) =>
-                    this.handleNewStudent(newStudent)
-                  }
+                  onSaveStudent={(student) => this.handleSaveStudent(student)}
                 />
               )}
             />
