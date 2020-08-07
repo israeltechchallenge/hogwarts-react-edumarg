@@ -29,23 +29,39 @@ class Student extends Component {
           parcelongue: "",
         },
       },
+      currentSkills: {
+        potionMaking: "",
+        spells: "",
+        quidditch: "",
+        animagus: "",
+        apparate: "",
+        metamorphmagi: "",
+        parcelongue: "",
+      },
+      desierSkills: {
+        potionMaking: "",
+        spells: "",
+        quidditch: "",
+        animagus: "",
+        apparate: "",
+        metamorphmagi: "",
+        parcelongue: "",
+      },
       errors: {},
     };
   }
 
   componentDidMount() {
     const studentId = this.props.match.params.id;
-    console.log("studentId", studentId);
-    console.log("this.props.studentList", this.props.studentList);
     if (studentId === "new") return;
     const editStudent = this.props.studentList.find(
-      (student) => student.id == studentId
+      (student) => student.id === studentId
     );
-    console.log("editStudent", editStudent);
     this.setState({ student: editStudent });
   }
 
   handleChange(event) {
+    console.log("onchange");
     const student = { ...this.state.student };
     student[event.target.name] = event.target.value;
     this.setState({
@@ -53,9 +69,30 @@ class Student extends Component {
     });
   }
 
+  handleOnChangeCurrentSkills(event) {
+    console.log("onchange current", event);
+    const currentSkills = { ...this.state.currentSkills };
+    currentSkills[event.target.name] = event.target.value;
+    this.setState({
+      currentSkills,
+    });
+  }
+
+  handleOnChangeDesierSkills(event) {
+    console.log("onchange desier", event);
+    const desierSkills = { ...this.state.desierSkills };
+    desierSkills[event.target.name] = event.target.value;
+    this.setState({
+      desierSkills,
+    });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
-    this.props.onSaveStudent(this.state.student);
+    let newStudent = { ...this.state.student };
+    newStudent.currentSkills = this.state.currentSkills;
+    newStudent.desierSkills = this.state.desierSkills;
+    this.props.onSaveStudent(this.newStudent);
     event.target.reset();
     this.props.history.replace("/home");
   }
@@ -106,11 +143,17 @@ class Student extends Component {
             <div className="row">
               <div className="col-5 mx-auto">
                 <h4 className="my-2 text-justify">Current Skills and level</h4>
-                <SkillsTable type="current" />
+                <SkillsTable
+                  type="current"
+                  onChange={(event) => this.handleOnChangeCurrentSkills(event)}
+                />
               </div>
               <div className="col-5 mx-auto">
                 <h4 className="my-2 text-justify">Desier Skills and level</h4>
-                <SkillsTable type="desier" />
+                <SkillsTable
+                  type="desier"
+                  onChange={(event) => this.handleOnChangeDesierSkills(event)}
+                />
               </div>
             </div>
             <button type="submit" className="btn btn-primary mx-3">

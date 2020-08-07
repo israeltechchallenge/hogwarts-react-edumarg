@@ -147,26 +147,25 @@ class App extends Component {
 
   handleNewAdmin(newAdmin) {
     let newAdmins = [...this.state.admins];
-    const now = Date.now();
+    const now = new Date();
     newAdmin.createdOn = now.toDateString();
     newAdmins = [newAdmin, ...newAdmins];
     mockAdmins = newAdmins;
+    console.log("new admin", mockAdmins);
     this.setState({ admins: newAdmins });
     localStorage.setItem("adminList", JSON.stringify(newAdmins));
   }
 
   handleDeleteStudent(studentToDelete) {
-    const orignalStudent = [...this.state.students];
-    const newStudents = orignalStudent.filter(
+    let newStudents = this.state.students.filter(
       (student) => student.id !== studentToDelete.id
     );
+    this.setState({ students: newStudents });
     mockStudents = newStudents;
     localStorage.setItem("studentList", JSON.stringify(newStudents));
-    this.setState({ students: newStudents });
   }
 
   handleSaveStudent(student) {
-    console.log("hande save student", student);
     const now = new Date();
     let newStudents = [...this.state.students];
     let studentInDb = newStudents.find((s) => s.id === student.id);
@@ -180,7 +179,7 @@ class App extends Component {
     // new student logic
     else if (!student.id) {
       const id = now - new Date("1981-05-20");
-      student.id = id;
+      student.id = id.toString();
       student.createdOn = now.toDateString();
       newStudents = [student, ...newStudents];
     }
