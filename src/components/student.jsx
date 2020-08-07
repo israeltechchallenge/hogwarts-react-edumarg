@@ -33,6 +33,15 @@ class Student extends Component {
     };
   }
 
+  componentDidMount() {
+    const studentId = this.props.match.params.id;
+    if (studentId === "new") return;
+    const editStudent = this.props.studentList.find(
+      (student) => student.id === studentId
+    );
+    this.setState({ student: editStudent });
+  }
+
   handleChange(event) {
     const account = { ...this.state.account };
     account[event.target.name] = event.target.value;

@@ -90,11 +90,11 @@ let mockStudents = [
 
 let mockAdmins = [
   {
-    id: "mastoideo",
+    id: "a1b2c3d4",
     firstName: "Edu",
     lastName: "Marg",
-    email: "edu@mail.com",
-    password: "12345",
+    email: "e@mail.com",
+    password: "123",
   },
 ];
 
@@ -105,8 +105,16 @@ class App extends Component {
     currentAdmin: "",
   };
 
-  componentDidMount() {
-    this.setState({ students: mockStudents, admins: mockAdmins });
+  componentWillMount() {
+    let currentAccount = localStorage.getItem("currentLogedAdmin");
+    currentAccount = JSON.parse(currentAccount);
+    const studentList = localStorage.getItem("studentList");
+    const adminList = localStorage.getItem("adminList");
+    this.setState({
+      students: studentList || mockStudents,
+      admins: adminList || mockAdmins,
+      currentAdmin: currentAccount,
+    });
   }
 
   handleLogin(account) {
@@ -116,6 +124,7 @@ class App extends Component {
         admin.password === account.password
       ) {
         this.setState({ currentAdmin: admin });
+        localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
         alert("Log In success");
         return;
       }
@@ -131,12 +140,14 @@ class App extends Component {
     newAdmins = [newAdmin, ...newAdmins];
     mockAdmins = newAdmins;
     this.setState({ admins: newAdmins });
+    localStorage.setItem("adminList", JSON.stringify(newAdmins));
   }
   handleNewStudent(newStudent) {
     console.log("hande new student", newStudent);
     let newStudents = [...this.state.students];
     newStudents = [newStudent, ...newStudents];
     this.setState({ students: newStudents });
+    localStorage.setItem("studentList", JSON.stringify(newStudents));
   }
 
   handleDeleteStudent(studentToDelete) {
@@ -146,14 +157,20 @@ class App extends Component {
     );
     mockStudents = newStudents;
     this.setState({ students: newStudents });
+    localStorage.setItem("studentList", JSON.stringify(newStudents));
+  }
+
+  handleEditStudent(student) {
+    return;
   }
 
   render() {
+    const { currentAdmin, students, admins } = this.state;
     return (
       <React.Fragment>
         <Router>
           <NavBar
-            currentAdmin={this.state.currentAdmin}
+            currentAdmin={currentAdmin}
             handleLogOut={() => this.handleLogOut()}
           />
           <Switch>
@@ -161,8 +178,9 @@ class App extends Component {
               path="/home"
               render={(props) => (
                 <MainPage
-                  students={this.state.students}
-                  currentAdmin={this.state.currentAdmin}
+                  students={students}
+                  currentAdmin={currentAdmin}
+                  editStudent={(student) => this.handleEditStudent(student)}
                   onDelete={(student) => this.handleDeleteStudent(student)}
                   {...props}
                 />
@@ -183,15 +201,16 @@ class App extends Component {
                 <LogIn
                   {...props}
                   onLogin={(account) => this.handleLogin(account)}
-                  currentAdmin={this.state.currentAdmin}
+                  currentAdmin={currentAdmin}
                 />
               )}
             />
             <Route
-              path="/student"
+              path="/student/:id"
               render={(props) => (
                 <Student
                   {...props}
+                  studentList={students}
                   onNewStudent={(newStudent) =>
                     this.handleNewStudent(newStudent)
                   }
