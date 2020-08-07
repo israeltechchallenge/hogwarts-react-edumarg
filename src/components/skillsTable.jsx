@@ -21,7 +21,7 @@ const SkillsTable = (props) => {
         </thead>
         <tbody>
           {skills.map((skill) => (
-            <tr key={`${props.skillType}${skill.replace(" ", "")}`}>
+            <tr key={`${props.type}${skill.replace(" ", "")}`}>
               <td className="pt-3 mt-1">{skill}</td>
               <td>
                 <div className="form-group ">
@@ -32,15 +32,23 @@ const SkillsTable = (props) => {
                     {`Current ${skill} level`}
                   </label>
                   <select
-                    id={`${props.skillType}${skill.replace(" ", "")}level`}
+                    key={`${props.type}${skill.replace(" ", "")}level`}
                     className="form-control"
+                    name={`${skill
+                      .replace(" ", "")
+                      .replace(skill[0], skill[0].toLocaleLowerCase())}`}
+                    id={`$${skill
+                      .replace(" ", "")
+                      .replace(skill[0], skill[0].toLocaleLowerCase())}`}
+                    onChange={(event) => props.onChange(event)}
                   >
-                    <option defaultValue>Choose...</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                    <option defaultValue>Choose Level...</option>
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                   </select>
                 </div>
               </td>

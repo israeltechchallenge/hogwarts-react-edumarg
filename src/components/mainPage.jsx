@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 
 class MainPage extends Component {
   constructor(props) {
@@ -79,15 +80,12 @@ class MainPage extends Component {
                         </table>
                       </td>
                       <td>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-warning"
-                          // onClick={this.props.history.replace(
-                          //   `/student/${student.id}`
-                          // )}
+                        <Link
+                          className="btn btn-sm py-1 btn-warning"
+                          to={`/student/${student.id}`}
                         >
                           Edit
-                        </button>
+                        </Link>
                       </td>
                       <td>
                         <button

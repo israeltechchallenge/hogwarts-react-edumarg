@@ -29,7 +29,7 @@ class NavBar extends Component {
                 Home
               </NavLink>
               {currentAdmin && (
-                <NavLink className="nav-item nav-link" to="/student">
+                <NavLink className="nav-item nav-link" to="/student/new">
                   Add student
                 </NavLink>
               )}

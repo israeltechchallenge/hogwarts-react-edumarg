@@ -19,6 +19,8 @@ let mockStudents = [
     firstName: "Harry",
     lastName: "Potter",
     email: "potter@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "3",
       spells: "3",
@@ -43,6 +45,8 @@ let mockStudents = [
     firstName: "Hermione",
     lastName: "Granger",
     email: "granger@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "5",
       spells: "5",
@@ -67,6 +71,8 @@ let mockStudents = [
     firstName: "Ron",
     lastName: "Weasley",
     email: "rweasley@email.com",
+    createdOn: "",
+    lastEdit: "",
     currentSkills: {
       potionMaking: "2",
       spells: "2",
@@ -90,11 +96,12 @@ let mockStudents = [
 
 let mockAdmins = [
   {
-    id: "mastoideo",
+    id: "a1b2c3d4",
     firstName: "Edu",
     lastName: "Marg",
-    email: "edu@mail.com",
-    password: "12345",
+    email: "e@mail.com",
+    createdOn: "",
+    password: "123",
   },
 ];
 
@@ -105,8 +112,18 @@ class App extends Component {
     currentAdmin: "",
   };
 
-  componentDidMount() {
-    this.setState({ students: mockStudents, admins: mockAdmins });
+  componentWillMount() {
+    let currentAccount = localStorage.getItem("currentLogedAdmin");
+    currentAccount = JSON.parse(currentAccount);
+    let studentList = localStorage.getItem("studentList");
+    studentList = JSON.parse(studentList);
+    let adminList = localStorage.getItem("adminList");
+    adminList = JSON.parse(adminList);
+    this.setState({
+      students: studentList || mockStudents,
+      admins: adminList || mockAdmins,
+      currentAdmin: currentAccount,
+    });
   }
 
   handleLogin(account) {
@@ -116,6 +133,7 @@ class App extends Component {
         admin.password === account.password
       ) {
         this.setState({ currentAdmin: admin });
+        localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
         alert("Log In success");
         return;
       }
@@ -126,34 +144,58 @@ class App extends Component {
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
+
   handleNewAdmin(newAdmin) {
     let newAdmins = [...this.state.admins];
+    const now = new Date();
+    newAdmin.createdOn = now.toDateString();
     newAdmins = [newAdmin, ...newAdmins];
     mockAdmins = newAdmins;
+    console.log("new admin", mockAdmins);
     this.setState({ admins: newAdmins });
-  }
-  handleNewStudent(newStudent) {
-    console.log("hande new student", newStudent);
-    let newStudents = [...this.state.students];
-    newStudents = [newStudent, ...newStudents];
-    this.setState({ students: newStudents });
+    localStorage.setItem("adminList", JSON.stringify(newAdmins));
   }
 
   handleDeleteStudent(studentToDelete) {
-    const orignalStudent = [...this.state.students];
-    const newStudents = orignalStudent.filter(
+    let newStudents = this.state.students.filter(
       (student) => student.id !== studentToDelete.id
     );
+    this.setState({ students: newStudents });
     mockStudents = newStudents;
+    localStorage.setItem("studentList", JSON.stringify(newStudents));
+  }
+
+  handleSaveStudent(student) {
+    console.log("new student", student);
+    const now = new Date();
+    let newStudents = [...this.state.students];
+    let studentInDb = newStudents.find((s) => s.id === student.id);
+
+    if (student.id) {
+      const index = newStudents.indexOf(studentInDb);
+      student.lastEdit = now.toDateString();
+      newStudents[index] = { ...student };
+    }
+
+    // new student logic
+    else if (!student.id) {
+      const id = now - new Date("1981-05-20");
+      student.id = id.toString();
+      student.createdOn = now.toDateString();
+      newStudents = [student, ...newStudents];
+    }
+
+    localStorage.setItem("studentList", JSON.stringify(newStudents));
     this.setState({ students: newStudents });
   }
 
   render() {
+    const { currentAdmin, students } = this.state;
     return (
       <React.Fragment>
         <Router>
           <NavBar
-            currentAdmin={this.state.currentAdmin}
+            currentAdmin={currentAdmin}
             handleLogOut={() => this.handleLogOut()}
           />
           <Switch>
@@ -161,8 +203,8 @@ class App extends Component {
               path="/home"
               render={(props) => (
                 <MainPage
-                  students={this.state.students}
-                  currentAdmin={this.state.currentAdmin}
+                  students={students}
+                  currentAdmin={currentAdmin}
                   onDelete={(student) => this.handleDeleteStudent(student)}
                   {...props}
                 />
@@ -183,18 +225,17 @@ class App extends Component {
                 <LogIn
                   {...props}
                   onLogin={(account) => this.handleLogin(account)}
-                  currentAdmin={this.state.currentAdmin}
+                  currentAdmin={currentAdmin}
                 />
               )}
             />
             <Route
-              path="/student"
+              path="/student/:id"
               render={(props) => (
                 <Student
                   {...props}
-                  onNewStudent={(newStudent) =>
-                    this.handleNewStudent(newStudent)
-                  }
+                  studentList={students}
+                  onSaveStudent={(student) => this.handleSaveStudent(student)}
                 />
               )}
             />

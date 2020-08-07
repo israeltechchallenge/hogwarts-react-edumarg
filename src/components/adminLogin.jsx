@@ -12,20 +12,58 @@ class Login extends Component {
     };
   }
 
+  validate() {
+    const { email, password } = this.state.account;
+    const errors = {};
+
+    if (email.trim() === "") return `Email requiere`;
+    else if (email) {
+      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
+      if (!regex.test(email))
+        return `Invalid email format, please make sure to write a valid email`;
+    }
+
+    if (password.trim() === "") return `Password requiere`;
+
+    return Object.keys(errors).length === 0 ? null : errors;
+  }
+
+  validateProperty({ name, value }) {
+    if (name === "email") {
+      if (value.trim() === "") return `Email requiere`;
+      if (value) {
+        const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
+        if (!regex.test(value))
+          return `Invalid email format, please make sure to write a valid email`;
+      }
+    } else if (name === "password") {
+      if (value.trim() === "") return `Password requiere`;
+    }
+  }
+
   handleChange(event) {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(event.target);
+    if (errorMessage) errors[event.target.name] = errorMessage;
+    else delete errors[event.target.name];
+
     const account = { ...this.state.account };
     account[event.target.name] = event.target.value;
-    this.setState({ account });
+    this.setState({ account, errors });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+    const errors = this.validate();
+    this.setState({ errors });
+    if (errors) return;
+
     this.props.onLogin(this.state.account);
     event.target.reset();
   }
 
   render() {
-    const { account } = this.state;
+    const { account, errors } = this.state;
     if (this.props.currentAdmin) this.props.history.replace("/home");
     return (
       <React.Fragment>
@@ -43,6 +81,11 @@ class Login extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.email && (
+              <div className="alert alert-danger" role="alert">
+                {errors.email}
+              </div>
+            )}
             <div className="form-group">
               <label htmlFor="password">Password</label>
               <input
@@ -54,9 +97,17 @@ class Login extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
-
-            <button type="submit" className="btn btn-primary">
-              Submit
+            {errors.password && (
+              <div className="alert alert-danger" role="alert">
+                {errors.password}
+              </div>
+            )}
+            <button
+              type="submit"
+              className="btn btn-primary my-3"
+              disabled={this.validate()}
+            >
+              Log In
             </button>
           </form>
         </div>

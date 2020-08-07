@@ -10,39 +10,74 @@ class Student extends Component {
         firstName: "",
         lastName: "",
         email: "",
-        currentSkills: {
-          potionMaking: "",
-          spells: "",
-          quidditch: "",
-          animagus: "",
-          apparate: "",
-          metamorphmagi: "",
-          parcelongue: "",
-        },
-        desierSkills: {
-          potionMaking: "",
-          spells: "",
-          quidditch: "",
-          animagus: "",
-          apparate: "",
-          metamorphmagi: "",
-          parcelongue: "",
-        },
+        currentSkills: {},
+        desierSkills: {},
+      },
+      currentSkills: {
+        potionMaking: "",
+        spells: "",
+        quidditch: "",
+        animagus: "",
+        apparate: "",
+        metamorphmagi: "",
+        parcelongue: "",
+      },
+      desierSkills: {
+        potionMaking: "",
+        spells: "",
+        quidditch: "",
+        animagus: "",
+        apparate: "",
+        metamorphmagi: "",
+        parcelongue: "",
       },
       errors: {},
     };
   }
 
+  componentDidMount() {
+    const studentId = this.props.match.params.id;
+    if (studentId === "new") return;
+    const editStudent = this.props.studentList.find(
+      (student) => student.id === studentId
+    );
+    this.setState({ student: editStudent });
+  }
+
   handleChange(event) {
-    const account = { ...this.state.account };
-    account[event.target.name] = event.target.value;
-    this.setState({ account });
+    const student = { ...this.state.student };
+    student[event.target.name] = event.target.value;
+    this.setState({
+      student,
+    });
+  }
+
+  handleOnChangeCurrentSkills(event) {
+    const currentSkills = { ...this.state.currentSkills };
+    currentSkills[event.target.name] = event.target.value;
+    this.setState({
+      currentSkills,
+    });
+  }
+
+  handleOnChangeDesierSkills(event) {
+    const desierSkills = { ...this.state.desierSkills };
+    desierSkills[event.target.name] = event.target.value;
+    this.setState({
+      desierSkills,
+    });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.onNewStudent(this.state.student);
+    let newStudent = { ...this.state.student };
+    console.log("sbumnit student", newStudent);
+    newStudent.currentSkills = this.state.currentSkills;
+    newStudent.desierSkills = this.state.desierSkills;
+    console.log("sbumnit compleate student", newStudent);
+    this.props.onSaveStudent(newStudent);
     event.target.reset();
+    this.props.history.replace("/home");
   }
 
   render() {
@@ -51,7 +86,7 @@ class Student extends Component {
       <React.Fragment>
         <div className="col-md-10 mx-auto">
           <h2 className="my-3">Student</h2>
-          <form>
+          <form onSubmit={(event) => this.handleSubmit(event)}>
             <div className="form-group">
               <label htmlFor="firstName">First Name</label>
               <input
@@ -60,6 +95,7 @@ class Student extends Component {
                 id="firstName"
                 name="firstName"
                 value={student.firstName}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
@@ -71,6 +107,7 @@ class Student extends Component {
                 id="lastName"
                 name="lastName"
                 value={student.lastName}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
@@ -82,21 +119,28 @@ class Student extends Component {
                 id="email"
                 name="email"
                 value={student.email}
+                onChange={(event) => this.handleChange(event)}
               />
             </div>
 
             <div className="row">
               <div className="col-5 mx-auto">
                 <h4 className="my-2 text-justify">Current Skills and level</h4>
-                <SkillsTable type="current" />
+                <SkillsTable
+                  type="current"
+                  onChange={(event) => this.handleOnChangeCurrentSkills(event)}
+                />
               </div>
               <div className="col-5 mx-auto">
                 <h4 className="my-2 text-justify">Desier Skills and level</h4>
-                <SkillsTable type="desier" />
+                <SkillsTable
+                  type="desier"
+                  onChange={(event) => this.handleOnChangeDesierSkills(event)}
+                />
               </div>
             </div>
             <button type="submit" className="btn btn-primary mx-3">
-              Submit
+              Save
             </button>
           </form>
         </div>
