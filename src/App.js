@@ -161,11 +161,12 @@ class App extends Component {
       (student) => student.id !== studentToDelete.id
     );
     mockStudents = newStudents;
-    this.setState({ students: newStudents });
     localStorage.setItem("studentList", JSON.stringify(newStudents));
+    this.setState({ students: newStudents });
   }
 
   handleSaveStudent(student) {
+    console.log("hande save student", student);
     const now = new Date();
     let newStudents = [...this.state.students];
     let studentInDb = newStudents.find((s) => s.id === student.id);
@@ -181,11 +182,11 @@ class App extends Component {
       const id = now - new Date("1981-05-20");
       student.id = id;
       student.createdOn = now.toDateString();
-      newStudents.push(student);
+      newStudents = [student, ...newStudents];
     }
 
-    this.setState({ students: newStudents });
     localStorage.setItem("studentList", JSON.stringify(newStudents));
+    this.setState({ students: newStudents });
   }
 
   render() {

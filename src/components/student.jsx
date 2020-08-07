@@ -35,10 +35,13 @@ class Student extends Component {
 
   componentDidMount() {
     const studentId = this.props.match.params.id;
+    console.log("studentId", studentId);
+    console.log("this.props.studentList", this.props.studentList);
     if (studentId === "new") return;
     const editStudent = this.props.studentList.find(
-      (student) => student.id === studentId
+      (student) => student.id == studentId
     );
+    console.log("editStudent", editStudent);
     this.setState({ student: editStudent });
   }
 
