@@ -1,15 +1,24 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import school_shield from "../img/shield_icon.png";
+import MyModal from "./modal";
 class MainPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { students: this.props.students };
+    this.state = {
+      students: this.props.students,
+      studentToDelete: "",
+    };
   }
   render() {
     const enrolledStudents = this.state.students.length;
     return (
       <React.Fragment>
+        <MyModal
+          id="deleteModal"
+          onDelete={() => this.props.onDelete(this.state.studentToDelete)}
+          studentToDelete={this.state.studentToDelete}
+        />
         <div className="col-sm-10 mx-auto">
           {this.props.currentAdmin && (
             <React.Fragment>
@@ -29,87 +38,104 @@ class MainPage extends Component {
                   ? `There are currently ${enrolledStudents} enrolled students at Hogwarts`
                   : `Currently there are not students enrroled at Hogwarts`}
               </h6>
-              <table className="table col-sm-10">
-                <thead className="thead-dark">
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Current Skills</th>
-                    <th scope="col">Desier Skills</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {this.state.students.map((student) => (
-                    <tr key={student.id}>
-                      <th scope="row">
-                        {this.state.students.indexOf(student) + 1}
-                      </th>
-                      <td>{student.firstName}</td>
-                      <td>{student.lastName}</td>
-                      <td>{student.email}</td>
-                      <td>
-                        <table className="table">
-                          <thead className="thead-light">
-                            <tr>
-                              <th scope="col">Current Skill</th>
-                              <th scope="col">Level</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Object.keys(student.currentSkills).map((skill) => (
-                              <tr key={`current${skill}`}>
-                                <td>{skill}</td>
-                                <td>{student.currentSkills[skill]}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </td>
-
-                      <td>
-                        {" "}
-                        <table className="table">
-                          <thead className="thead-light">
-                            <tr>
-                              <th scope="col">Desier Skill</th>
-                              <th scope="col">Level</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {Object.keys(student.desierSkills).map((skill) => (
-                              <tr key={`desier${skill}`}>
-                                <td>{skill}</td>
-                                <td>{student.desierSkills[skill]}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </td>
-                      <td>
-                        <Link
-                          className="btn btn-sm py-1 btn-warning"
-                          to={`/student/${student.id}`}
-                        >
-                          Edit
-                        </Link>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-danger"
-                          onClick={() => this.props.onDelete(student)}
-                        >
-                          Delete
-                        </button>
-                      </td>
+              <div className="table-responsive">
+                <table className="table col">
+                  <thead className="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">First</th>
+                      <th scope="col">Last</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Current Skills</th>
+                      <th scope="col">Desier Skills</th>
+                      <th scope="col"></th>
+                      <th scope="col"></th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {this.state.students.map((student) => (
+                      <tr key={student.id}>
+                        <th scope="row">
+                          {this.state.students.indexOf(student) + 1}
+                        </th>
+                        <td>{student.firstName}</td>
+                        <td>{student.lastName}</td>
+                        <td>{student.email}</td>
+                        <td>
+                          <table className="table">
+                            <thead className="thead-light">
+                              <tr>
+                                <th className="my-0 py-0" scope="col">
+                                  Current Skill
+                                </th>
+                                <th className="my-0 py-0" scope="col">
+                                  Level
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {Object.keys(student.currentSkills).map(
+                                (skill) => (
+                                  <tr key={`current${skill}`}>
+                                    <td>{skill}</td>
+                                    <td>{student.currentSkills[skill]}</td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </td>
+
+                        <td>
+                          {" "}
+                          <table className="table">
+                            <thead className="thead-light">
+                              <tr>
+                                <th className="my-0 py-0" scope="col">
+                                  Desier Skill
+                                </th>
+                                <th className="my-0 py-0" scope="col">
+                                  Level
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {Object.keys(student.desierSkills).map(
+                                (skill) => (
+                                  <tr key={`desier${skill}`}>
+                                    <td>{skill}</td>
+                                    <td>{student.desierSkills[skill]}</td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
+                        </td>
+                        <td>
+                          <Link
+                            className="btn btn-sm py-1 btn-warning"
+                            to={`/student/${student.id}`}
+                          >
+                            Edit
+                          </Link>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-sm btn-danger"
+                            data-toggle="modal"
+                            data-target="#deleteModal"
+                            onClick={() =>
+                              this.setState({ studentToDelete: student })
+                            }
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </React.Fragment>
           )}
           {!this.props.currentAdmin && (

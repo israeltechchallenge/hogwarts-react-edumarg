@@ -83,7 +83,6 @@ export function validateProperty({ name, value }, passwordCheck = "") {
     }
 
     if (name === "password") {
-        console.log("password", value);
         if (value.trim() === "") return `Password requiere`;
         if (value) {
             const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/;
@@ -93,8 +92,6 @@ export function validateProperty({ name, value }, passwordCheck = "") {
     }
 
     if (name === "passwordConfirm") {
-        console.log("passwor confirm", value);
-        console.log("check", passwordCheck);
         if (value.trim() === "") return `Password Confirmation requiere`;
         else if (value !== passwordCheck) {
             return `Password do not match, please make sure you typed the same password..`;
