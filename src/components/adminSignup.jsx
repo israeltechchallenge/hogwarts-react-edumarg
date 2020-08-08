@@ -17,6 +17,16 @@ class SignUp extends Component {
     };
   }
 
+  componentDidMount() {
+    const admintId = this.props.match.params.id;
+    if (admintId === "new") return;
+    const editAdmin = this.props.adminList.find(
+      (admin) => admin.id === admintId
+    );
+    editAdmin.passwordConfirm = editAdmin.password;
+    this.setState({ admin: editAdmin });
+  }
+
   handleChange(event) {
     const errors = { ...this.state.errors };
     const errorMessage = validateProperty(
@@ -41,7 +51,7 @@ class SignUp extends Component {
     this.setState({ errors });
     if (errors) return;
 
-    this.props.OnNewAdmin(this.state.admin);
+    this.props.OnSaveAdmin(this.state.admin);
     event.target.reset();
     this.props.history.replace("/home");
   }
@@ -141,10 +151,10 @@ class SignUp extends Component {
 
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary m-3"
               disabled={validate(this.state.admin)}
             >
-              Sing Up
+              Save
             </button>
           </form>
         </div>

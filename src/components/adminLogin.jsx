@@ -41,7 +41,7 @@ class Login extends Component {
     const { account, errors } = this.state;
     return (
       <React.Fragment>
-        <div className="col mx-auto">
+        <div className="col-sm-10 mx-auto">
           <h2 className="my-3 col-sm-10">Admin Log In</h2>
           <form onSubmit={(event) => this.handleSubmit(event)}>
             <div className="form-group col-sm-10">
@@ -78,7 +78,7 @@ class Login extends Component {
             )}
             <button
               type="submit"
-              className="btn btn-primary my-3"
+              className="btn btn-primary m-3"
               disabled={validate(this.state.account)}
             >
               Log In

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 class NavBar extends Component {
   constructor(props) {
@@ -39,11 +39,11 @@ class NavBar extends Component {
                 </NavLink>
               )}
               {!currentAdmin && (
-                <NavLink className="nav-item nav-link" to="/signup">
+                <NavLink className="nav-item nav-link" to="/signup/new">
                   Sign Up
                 </NavLink>
               )}
-              )
+
               {currentAdmin && (
                 <NavLink
                   className="nav-item nav-link"
@@ -55,9 +55,12 @@ class NavBar extends Component {
               )}
             </div>
             {currentAdmin && (
-              <span className="navbar-text ml-auto">
-                Loged In as {currentAdmin.firstName} {currentAdmin.lastName}
-              </span>
+              <React.Fragment>
+                <span className="navbar-text ml-auto mr-2">Loged In as</span>
+                <Link to={`/signup/${currentAdmin.id}`}>
+                  {currentAdmin.firstName} {currentAdmin.lastName}
+                </Link>
+              </React.Fragment>
             )}
           </div>
         </nav>

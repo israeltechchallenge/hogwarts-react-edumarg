@@ -1,5 +1,4 @@
 export function validate(data) {
-    const { firstName, lastName, email, password, passwordConfirm } = data;
     const error = {};
 
     for (let property in data) {
