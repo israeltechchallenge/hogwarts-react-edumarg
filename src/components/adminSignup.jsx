@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { validate, validateProperty } from "../common/validation";
 
 class SignUp extends Component {
   constructor(props) {
@@ -16,100 +17,12 @@ class SignUp extends Component {
     };
   }
 
-  validate() {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      passwordConfirm,
-    } = this.state.admin;
-
-    const errors = {};
-
-    if (firstName.trim() === "") return `First Name requiere`;
-    if (firstName) {
-      const regex = /^[A-Za-z]+$/;
-      if (!firstName.match(regex))
-        return `Invalid last name, please enter only letters with no special charcters or numbers`;
-    }
-
-    if (lastName.trim() === "") return `Last Name requiere`;
-    if (lastName) {
-      const regex = /^[A-Za-z]+$/;
-      if (!lastName.match(regex))
-        return `Invalid last name, please enter only letters with no special charcters or numbers`;
-    }
-
-    if (email.trim() === "") return `Email requiere`;
-    if (email) {
-      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
-      if (!regex.test(email))
-        return `Invalid email format, please make sure to write a valid email`;
-    }
-
-    if (password.trim() === "") return `Password requiere`;
-    if (password) {
-      const regex = /^(?=.*\d)(?=.*[a - z])(?=.* [A - Z]).{ 4, 8 } $/;
-      if (!regex.test(password))
-        return " Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
-    }
-
-    if (passwordConfirm.trim() === "") return `Password requiere`;
-    if (password !== passwordConfirm)
-      return `Passwords do not match, please make sure you typed same password`;
-
-    return Object.keys(errors).length === 0 ? null : errors;
-  }
-
-  validateProperty({ name, value }) {
-    if (name === "firstName") {
-      if (value.trim() === "") return `First Name requiere`;
-      if (value) {
-        const regex = /^[A-Za-z]+$/;
-        if (!value.match(regex))
-          return `Invalid first name, please enter only letters with no special charcters or numbers`;
-      }
-    }
-
-    if (name === "lastName") {
-      if (value.trim() === "") return `Last Name requiere`;
-      if (value) {
-        const regex = /^[A-Za-z]+$/;
-        if (!value.match(regex))
-          return `Invalid last name, please enter only letters with no special charcters or numbers`;
-      }
-    }
-
-    if (name === "email") {
-      if (value.trim() === "") return `Email requiere`;
-      if (value) {
-        const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
-        if (!regex.test(value))
-          return `Invalid email format, please make sure to write a valid email`;
-      }
-    }
-
-    if (name === "password") {
-      if (value.trim() === "") return `Password requiere`;
-      if (value) {
-        const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/;
-        if (!regex.test(value))
-          return " Password must be at least 6 characters, no more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
-      }
-    }
-
-    if (name === "passwordConfirm") {
-      if (value.trim() === "") return `Password Confirmation requiere`;
-      else if (value !== this.state.admin.password) {
-        return `Password do not match, please make sure you typed the same password`;
-      }
-    }
-  }
-
   handleChange(event) {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(event.target);
+    const errorMessage = validateProperty(
+      event.target,
+      this.state.admin.password
+    );
     if (errorMessage) errors[event.target.name] = errorMessage;
     else delete errors[event.target.name];
 
@@ -124,7 +37,7 @@ class SignUp extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const errors = this.validate();
+    const errors = validate(this.state.admin);
     this.setState({ errors });
     if (errors) return;
 
@@ -137,11 +50,11 @@ class SignUp extends Component {
     const { admin, errors } = this.state;
     return (
       <React.Fragment>
-        <div className="col-md-10 mx-auto">
+        <div className="col-sm-10 mx-auto">
           <h2 className="my-3">Admin Sign Up</h2>
 
           <form onSubmit={(event) => this.handleSubmit(event)}>
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="firstName">First Name</label>
               <input
                 type="text"
@@ -158,7 +71,7 @@ class SignUp extends Component {
               </div>
             )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
@@ -175,7 +88,7 @@ class SignUp extends Component {
               </div>
             )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="email">Email address</label>
               <input
                 type="email"
@@ -192,7 +105,7 @@ class SignUp extends Component {
               </div>
             )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -209,7 +122,7 @@ class SignUp extends Component {
               </div>
             )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="password2">Password Confirmation</label>
               <input
                 type="password"
@@ -228,8 +141,8 @@ class SignUp extends Component {
 
             <button
               type="submit"
-              className="btn btn-primary my-2"
-              disabled={this.validate()}
+              className="btn btn-primary"
+              disabled={validate(this.state.admin)}
             >
               Sing Up
             </button>

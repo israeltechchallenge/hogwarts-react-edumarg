@@ -10,16 +10,16 @@ class MainPage extends Component {
     const enrolledStudents = this.state.students.length;
     return (
       <React.Fragment>
-        <div className="col-md-10 mx-auto">
+        <div className="col-sm-10 mx-auto">
           {this.props.currentAdmin && (
             <React.Fragment>
-              <h2 className="my-3">Main Paige</h2>
-              <h6>
+              <h2 className="my-3 col-sm-10">Main Paige</h2>
+              <h6 className="my-2 col-sm-10">
                 {enrolledStudents
                   ? `There are currently ${enrolledStudents} enrolled students at Hogwarts`
                   : `Currently there are not students enrroled at Hogwarts`}
               </h6>
-              <table className="table">
+              <table className="table col-sm-10">
                 <thead className="thead-dark">
                   <tr>
                     <th scope="col">#</th>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { validate, validateProperty } from "../common/validation";
 
 class Login extends Component {
   constructor(props) {
@@ -12,65 +13,38 @@ class Login extends Component {
     };
   }
 
-  validate() {
-    const { email, password } = this.state.account;
-    const errors = {};
-
-    if (email.trim() === "") return `Email requiere`;
-    else if (email) {
-      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
-      if (!regex.test(email))
-        return `Invalid email format, please make sure to write a valid email`;
-    }
-
-    if (password.trim() === "") return `Password requiere`;
-
-    return Object.keys(errors).length === 0 ? null : errors;
-  }
-
-  validateProperty({ name, value }) {
-    if (name === "email") {
-      if (value.trim() === "") return `Email requiere`;
-      if (value) {
-        const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
-        if (!regex.test(value))
-          return `Invalid email format, please make sure to write a valid email`;
-      }
-    } else if (name === "password") {
-      if (value.trim() === "") return `Password requiere`;
-    }
+  componentDidUpdate() {
+    if (this.props.currentAdmin) this.props.history.replace("/home");
   }
 
   handleChange(event) {
     const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(event.target);
+    const errorMessage = validateProperty(event.target);
     if (errorMessage) errors[event.target.name] = errorMessage;
     else delete errors[event.target.name];
 
     const account = { ...this.state.account };
     account[event.target.name] = event.target.value;
-    this.setState({ account, errors });
+    this.setState({ account, errors: errors || {} });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    const errors = this.validate();
+    const errors = validate(this.state.account);
     this.setState({ errors });
     if (errors) return;
-
     this.props.onLogin(this.state.account);
     event.target.reset();
   }
 
   render() {
     const { account, errors } = this.state;
-    if (this.props.currentAdmin) this.props.history.replace("/home");
     return (
       <React.Fragment>
-        <div className="col-md-10 mx-auto">
-          <h2 className="my-3">Admin Log In</h2>
+        <div className="col mx-auto">
+          <h2 className="my-3 col-sm-10">Admin Log In</h2>
           <form onSubmit={(event) => this.handleSubmit(event)}>
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="email">Email address</label>
               <input
                 type="email"
@@ -86,7 +60,7 @@ class Login extends Component {
                 {errors.email}
               </div>
             )}
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="password">Password</label>
               <input
                 type="password"
@@ -105,7 +79,7 @@ class Login extends Component {
             <button
               type="submit"
               className="btn btn-primary my-3"
-              disabled={this.validate()}
+              disabled={validate(this.state.account)}
             >
               Log In
             </button>
