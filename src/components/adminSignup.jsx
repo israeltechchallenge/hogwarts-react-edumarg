@@ -112,7 +112,6 @@ class SignUp extends Component {
     const errorMessage = this.validateProperty(event.target);
     if (errorMessage) errors[event.target.name] = errorMessage;
     else delete errors[event.target.name];
-    console.log("errors", errors);
 
     const admin = { ...this.state.admin };
     const now = new Date();
@@ -129,14 +128,9 @@ class SignUp extends Component {
     this.setState({ errors });
     if (errors) return;
 
-    // if (this.state.password === this.state.passwordConfirm) {
     this.props.OnNewAdmin(this.state.admin);
     event.target.reset();
     this.props.history.replace("/home");
-    // } else
-    //   alert(
-    //     `Password do not match, plase make sure both paswords are the same`
-    //   );
   }
 
   render() {

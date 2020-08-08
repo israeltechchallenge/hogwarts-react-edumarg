@@ -44,11 +44,77 @@ class Student extends Component {
     this.setState({ student: editStudent });
   }
 
+  validate() {
+    const { firstName, lastName, email } = this.state.student;
+    const errors = {};
+
+    if (firstName.trim() === "") return `First Name requiere`;
+    if (firstName) {
+      const regex = /^[A-Za-z]+$/;
+      if (!firstName.match(regex))
+        return `Invalid last name, please enter only letters with no special charcters or numbers`;
+    }
+
+    if (lastName.trim() === "") return `Last Name requiere`;
+    if (lastName) {
+      const regex = /^[A-Za-z]+$/;
+      if (!lastName.match(regex))
+        return `Invalid last name, please enter only letters with no special charcters or numbers`;
+    }
+
+    if (email.trim() === "") return `Email requiere`;
+    if (email) {
+      const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
+      if (!regex.test(email))
+        return `Invalid email format, please make sure to write a valid email`;
+    }
+
+    return Object.keys(errors).length === 0 ? null : errors;
+  }
+
+  validateProperty({ name, value }) {
+    console.log("name", name, "value", value);
+
+    if (name === "firstName") {
+      if (value.trim() === "") return `First Name requiere`;
+      if (value) {
+        const regex = /^[A-Za-z]+$/;
+        if (!value.match(regex))
+          return `Invalid first name, please enter only letters with no special charcters or numbers`;
+      }
+    }
+
+    if (name === "lastName") {
+      if (value.trim() === "") return `Last Name requiere`;
+      if (value) {
+        const regex = /^[A-Za-z]+$/;
+        if (!value.match(regex))
+          return `Invalid last name, please enter only letters with no special charcters or numbers`;
+      }
+    }
+
+    if (name === "email") {
+      if (value.trim() === "") return `Email requiere`;
+      if (value) {
+        const regex = /^[A-Z0-9_'%=+!`#~$*?^{}&|-]+([\.][A-Z0-9_'%=+!`#~$*?^{}&|-]+)*@[A-Z0-9-]+(\.[A-Z0-9-]+)+$/i;
+        if (!regex.test(value))
+          return `Invalid email format, please make sure to write a valid email`;
+      }
+    }
+  }
+
   handleChange(event) {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(event.target);
+    if (errorMessage) errors[event.target.name] = errorMessage;
+    else delete errors[event.target.name];
+    console.log("errors", errors);
+
     const student = { ...this.state.student };
     student[event.target.name] = event.target.value;
     this.setState({
       student,
+      errors,
     });
   }
 
@@ -70,18 +136,22 @@ class Student extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const errors = this.validate();
+    this.setState({ errors });
+    if (errors) return;
+
     let newStudent = { ...this.state.student };
-    console.log("sbumnit student", newStudent);
     newStudent.currentSkills = this.state.currentSkills;
     newStudent.desierSkills = this.state.desierSkills;
-    console.log("sbumnit compleate student", newStudent);
+
     this.props.onSaveStudent(newStudent);
     event.target.reset();
     this.props.history.replace("/home");
   }
 
   render() {
-    const { student } = this.state;
+    const { student, errors } = this.state;
     return (
       <React.Fragment>
         <div className="col-md-10 mx-auto">
@@ -98,6 +168,11 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.firstName && (
+              <div className="alert alert-danger" role="alert">
+                {errors.firstName}
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="lastName">Last Name</label>
@@ -110,6 +185,11 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.lastName && (
+              <div className="alert alert-danger" role="alert">
+                {errors.lastName}
+              </div>
+            )}
 
             <div className="form-group">
               <label htmlFor="email">Email address</label>
@@ -122,6 +202,11 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.email && (
+              <div className="alert alert-danger" role="alert">
+                {errors.email}
+              </div>
+            )}
 
             <div className="row">
               <div className="col-5 mx-auto">
@@ -131,6 +216,12 @@ class Student extends Component {
                   onChange={(event) => this.handleOnChangeCurrentSkills(event)}
                 />
               </div>
+              {errors.currentSkills && (
+                <div className="alert alert-danger" role="alert">
+                  {errors.currentSkills}
+                </div>
+              )}
+
               <div className="col-5 mx-auto">
                 <h4 className="my-2 text-justify">Desier Skills and level</h4>
                 <SkillsTable
@@ -139,7 +230,17 @@ class Student extends Component {
                 />
               </div>
             </div>
-            <button type="submit" className="btn btn-primary mx-3">
+            {errors.desiertSkills && (
+              <div className="alert alert-danger" role="alert">
+                {errors.desiertSkills}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-primary mx-3"
+              disabled={this.validate()}
+            >
               Save
             </button>
           </form>
