@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import SkillsTable from "./skillsTable";
+import { validate, validateProperty } from "../common/validation";
 
 class Student extends Component {
   constructor(props) {
@@ -45,10 +46,16 @@ class Student extends Component {
   }
 
   handleChange(event) {
+    const errors = { ...this.state.errors };
+    const errorMessage = validateProperty(event.target);
+    if (errorMessage) errors[event.target.name] = errorMessage;
+    else delete errors[event.target.name];
+
     const student = { ...this.state.student };
     student[event.target.name] = event.target.value;
     this.setState({
       student,
+      errors: errors || {},
     });
   }
 
@@ -70,24 +77,28 @@ class Student extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const errors = validate(this.state.student);
+    this.setState({ errors });
+    if (errors) return;
+
     let newStudent = { ...this.state.student };
-    console.log("sbumnit student", newStudent);
     newStudent.currentSkills = this.state.currentSkills;
     newStudent.desierSkills = this.state.desierSkills;
-    console.log("sbumnit compleate student", newStudent);
+
     this.props.onSaveStudent(newStudent);
     event.target.reset();
     this.props.history.replace("/home");
   }
 
   render() {
-    const { student } = this.state;
+    const { student, errors } = this.state;
     return (
       <React.Fragment>
-        <div className="col-md-10 mx-auto">
-          <h2 className="my-3">Student</h2>
+        <div className="col-sm-10 mx-auto">
+          <h2 className="my-3 col-sm-10">Student</h2>
           <form onSubmit={(event) => this.handleSubmit(event)}>
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="firstName">First Name</label>
               <input
                 type="text"
@@ -98,8 +109,13 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.firstName && (
+              <div className="alert alert-danger" role="alert">
+                {errors.firstName}
+              </div>
+            )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
@@ -110,8 +126,13 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.lastName && (
+              <div className="alert alert-danger" role="alert">
+                {errors.lastName}
+              </div>
+            )}
 
-            <div className="form-group">
+            <div className="form-group col-sm-10">
               <label htmlFor="email">Email address</label>
               <input
                 type="email"
@@ -122,24 +143,49 @@ class Student extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {errors.email && (
+              <div className="alert alert-danger" role="alert">
+                {errors.email}
+              </div>
+            )}
 
             <div className="row">
-              <div className="col-5 mx-auto">
-                <h4 className="my-2 text-justify">Current Skills and level</h4>
+              <div className="col-sm-5 mx-auto">
+                <h4 className="my-2 text-justify col-sm-10">
+                  Current Skills and level
+                </h4>
                 <SkillsTable
                   type="current"
                   onChange={(event) => this.handleOnChangeCurrentSkills(event)}
                 />
               </div>
-              <div className="col-5 mx-auto">
-                <h4 className="my-2 text-justify">Desier Skills and level</h4>
+              {errors.currentSkills && (
+                <div className="alert alert-danger" role="alert">
+                  {errors.currentSkills}
+                </div>
+              )}
+
+              <div className="col-sm-5 mx-auto">
+                <h4 className="my-2 text-justify col-sm-10">
+                  Desier Skills and level
+                </h4>
                 <SkillsTable
                   type="desier"
                   onChange={(event) => this.handleOnChangeDesierSkills(event)}
                 />
               </div>
             </div>
-            <button type="submit" className="btn btn-primary mx-3">
+            {errors.desiertSkills && (
+              <div className="alert alert-danger" role="alert">
+                {errors.desiertSkills}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="btn btn-primary mx-3"
+              disabled={validate(this.state.student)}
+            >
               Save
             </button>
           </form>

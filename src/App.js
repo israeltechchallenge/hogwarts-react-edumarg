@@ -101,7 +101,7 @@ let mockAdmins = [
     lastName: "Marg",
     email: "e@mail.com",
     createdOn: "",
-    password: "123",
+    password: "123Abc",
   },
 ];
 
@@ -122,7 +122,7 @@ class App extends Component {
     this.setState({
       students: studentList || mockStudents,
       admins: adminList || mockAdmins,
-      currentAdmin: currentAccount,
+      currentAdmin: currentAccount || "",
     });
   }
 
@@ -143,17 +143,35 @@ class App extends Component {
 
   handleLogOut() {
     this.setState({ currentAdmin: "" });
+    localStorage.setItem("currentLogedAdmin", JSON.stringify({}));
   }
 
-  handleNewAdmin(newAdmin) {
-    let newAdmins = [...this.state.admins];
+  handleSaveAdmin(admin) {
     const now = new Date();
-    newAdmin.createdOn = now.toDateString();
-    newAdmins = [newAdmin, ...newAdmins];
-    mockAdmins = newAdmins;
-    console.log("new admin", mockAdmins);
-    this.setState({ admins: newAdmins });
+    let newAdmins = [...this.state.admins];
+    let adminInDb = newAdmins.find((a) => a.id === admin.id);
+
+    if (admin.id) {
+      const index = newAdmins.indexOf(adminInDb);
+      admin.lastEdit = now.toDateString();
+      newAdmins[index] = { ...admin };
+    } else if (!admin.id) {
+      const id = now - new Date("1981-05-20");
+      admin.id = id.toString();
+      admin.createdOn = now.toDateString();
+      newAdmins = [admin, ...newAdmins];
+    }
+
     localStorage.setItem("adminList", JSON.stringify(newAdmins));
+    this.setState({ admins: newAdmins });
+
+    // const now = new Date();
+    // admin.createdOn = now.toDateString();
+    // newAdmins = [admin, ...newAdmins];
+    // mockAdmins = newAdmins;
+    // console.log("new admin", mockAdmins);
+    // this.setState({ admins: newAdmins });
+    // localStorage.setItem("adminList", JSON.stringify(newAdmins));
   }
 
   handleDeleteStudent(studentToDelete) {
@@ -166,7 +184,6 @@ class App extends Component {
   }
 
   handleSaveStudent(student) {
-    console.log("new student", student);
     const now = new Date();
     let newStudents = [...this.state.students];
     let studentInDb = newStudents.find((s) => s.id === student.id);
@@ -190,7 +207,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentAdmin, students } = this.state;
+    const { currentAdmin, students, admins } = this.state;
     return (
       <React.Fragment>
         <Router>
@@ -211,11 +228,12 @@ class App extends Component {
               )}
             />
             <Route
-              path="/signup"
+              path="/signup/:id"
               render={(props) => (
                 <SignUp
                   {...props}
-                  OnNewAdmin={(newAdmin) => this.handleNewAdmin(newAdmin)}
+                  OnSaveAdmin={(admin) => this.handleSaveAdmin(admin)}
+                  adminList={admins}
                 />
               )}
             />
