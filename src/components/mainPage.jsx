@@ -64,8 +64,12 @@ class MainPage extends Component {
                         <table className="table">
                           <thead className="thead-light">
                             <tr>
-                              <th scope="col">Current Skill</th>
-                              <th scope="col">Level</th>
+                              <th className="my-0 py-0" scope="col">
+                                Current Skill
+                              </th>
+                              <th className="my-0 py-0" scope="col">
+                                Level
+                              </th>
                             </tr>
                           </thead>
                           <tbody>
@@ -84,8 +88,12 @@ class MainPage extends Component {
                         <table className="table">
                           <thead className="thead-light">
                             <tr>
-                              <th scope="col">Desier Skill</th>
-                              <th scope="col">Level</th>
+                              <th className="my-0 py-0" scope="col">
+                                Desier Skill
+                              </th>
+                              <th className="my-0 py-0" scope="col">
+                                Level
+                              </th>
                             </tr>
                           </thead>
                           <tbody>

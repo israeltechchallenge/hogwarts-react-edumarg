@@ -46,6 +46,8 @@ class Student extends Component {
       this.props.history.replace("/not-found");
       return;
     }
+    console.log("current", editStudent.currentSkills);
+    console.log("desier", editStudent.desierSkills);
     this.setState({
       student: editStudent,
       currentSkills: editStudent.currentSkills,
@@ -159,12 +161,11 @@ class Student extends Component {
 
             <div className="row">
               <div className="col-sm-5 mx-auto">
-                <h4 className="my-2 text-justify col-sm-10">
-                  Current Skills and level
-                </h4>
+                <h4 className="my-2 text-justify col-sm-10">Current Skills</h4>
                 <SkillsTable
                   type="current"
                   onChange={(event) => this.handleOnChangeCurrentSkills(event)}
+                  data={this.state.currentSkills}
                 />
               </div>
               {errors.currentSkills && (
@@ -174,12 +175,11 @@ class Student extends Component {
               )}
 
               <div className="col-sm-5 mx-auto">
-                <h4 className="my-2 text-justify col-sm-10">
-                  Desier Skills and level
-                </h4>
+                <h4 className="my-2 text-justify col-sm-10">Desier Skills</h4>
                 <SkillsTable
                   type="desier"
                   onChange={(event) => this.handleOnChangeDesierSkills(event)}
+                  data={this.state.desierSkills}
                 />
               </div>
             </div>

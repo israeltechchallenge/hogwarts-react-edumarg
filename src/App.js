@@ -167,7 +167,6 @@ class App extends Component {
   }
 
   handleDeleteStudent(studentToDelete) {
-    console.log("delete");
     let newStudents = [...this.state.students];
     const index = newStudents.indexOf(studentToDelete);
     newStudents.splice(index, 1);
