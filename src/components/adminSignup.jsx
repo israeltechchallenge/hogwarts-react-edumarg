@@ -49,6 +49,11 @@ class SignUp extends Component {
     }
 
     if (password.trim() === "") return `Password requiere`;
+    if (password) {
+      const regex = /^(?=.*\d)(?=.*[a - z])(?=.* [A - Z]).{ 4, 8 } $/;
+      if (!regex.test(password))
+        return " Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
+    }
 
     if (passwordConfirm.trim() === "") return `Password requiere`;
     if (password !== passwordConfirm)
@@ -87,6 +92,11 @@ class SignUp extends Component {
 
     if (name === "password") {
       if (value.trim() === "") return `Password requiere`;
+      if (value) {
+        const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/;
+        if (!regex.test(value))
+          return " Password must be at least 6 characters, no more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
+      }
     }
 
     if (name === "passwordConfirm") {
