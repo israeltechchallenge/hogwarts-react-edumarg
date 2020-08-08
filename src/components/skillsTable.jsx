@@ -4,7 +4,7 @@ const SkillsTable = (props) => {
 
   return (
     <React.Fragment>
-      <table className="table">
+      <table className="table-sm">
         <thead>
           <tr>
             <th scope="col-5">Skill</th>

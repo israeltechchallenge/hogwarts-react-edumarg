@@ -15,22 +15,22 @@ class Student extends Component {
         desierSkills: {},
       },
       currentSkills: {
-        potionMaking: "",
-        spells: "",
-        quidditch: "",
-        animagus: "",
-        apparate: "",
-        metamorphmagi: "",
-        parcelongue: "",
+        potionMaking: 1,
+        spells: 1,
+        quidditch: 1,
+        animagus: 1,
+        apparate: 1,
+        metamorphmagi: 1,
+        parcelongue: 1,
       },
       desierSkills: {
-        potionMaking: "",
-        spells: "",
-        quidditch: "",
-        animagus: "",
-        apparate: "",
-        metamorphmagi: "",
-        parcelongue: "",
+        potionMaking: 1,
+        spells: 1,
+        quidditch: 1,
+        animagus: 1,
+        apparate: 1,
+        metamorphmagi: 1,
+        parcelongue: 1,
       },
       errors: {},
     };
@@ -69,20 +69,17 @@ class Student extends Component {
     });
   }
 
-  handleOnChangeCurrentSkills(event) {
-    const currentSkills = { ...this.state.currentSkills };
-    currentSkills[event.target.name] = event.target.value;
-    this.setState({
-      currentSkills,
-    });
-  }
-
-  handleOnChangeDesierSkills(event) {
-    const desierSkills = { ...this.state.desierSkills };
-    desierSkills[event.target.name] = event.target.value;
-    this.setState({
-      desierSkills,
-    });
+  handleOnChangeSkills(event, skills) {
+    const newSkills = { ...this.state[skills] };
+    newSkills[event.target.name] = event.target.value;
+    if (skills === "currentSkills")
+      this.setState({
+        currentSkills: newSkills,
+      });
+    else if (skills === "desierSkills")
+      this.setState({
+        desierSkills: newSkills,
+      });
   }
 
   handleSubmit(event) {
@@ -164,7 +161,9 @@ class Student extends Component {
                 <h4 className="my-2 text-justify col-sm-10">Current Skills</h4>
                 <SkillsTable
                   type="current"
-                  onChange={(event) => this.handleOnChangeCurrentSkills(event)}
+                  onChange={(event) =>
+                    this.handleOnChangeSkills(event, "currentSkills")
+                  }
                   data={this.state.currentSkills}
                 />
               </div>
@@ -178,7 +177,9 @@ class Student extends Component {
                 <h4 className="my-2 text-justify col-sm-10">Desier Skills</h4>
                 <SkillsTable
                   type="desier"
-                  onChange={(event) => this.handleOnChangeDesierSkills(event)}
+                  onChange={(event) =>
+                    this.handleOnChangeSkills(event, "desierSkills")
+                  }
                   data={this.state.desierSkills}
                 />
               </div>
