@@ -1,15 +1,24 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import school_shield from "../img/shield_icon.png";
+import MyModal from "./modal";
 class MainPage extends Component {
   constructor(props) {
     super(props);
-    this.state = { students: this.props.students };
+    this.state = {
+      students: this.props.students,
+      studentToDelete: "",
+    };
   }
   render() {
     const enrolledStudents = this.state.students.length;
     return (
       <React.Fragment>
+        <MyModal
+          id="deleteModal"
+          onDelete={() => this.props.onDelete(this.state.studentToDelete)}
+          studentToDelete={this.state.studentToDelete}
+        />
         <div className="col-sm-10 mx-auto">
           {this.props.currentAdmin && (
             <React.Fragment>
@@ -99,9 +108,12 @@ class MainPage extends Component {
                       </td>
                       <td>
                         <button
-                          type="button"
                           className="btn btn-sm btn-danger"
-                          onClick={() => this.props.onDelete(student)}
+                          data-toggle="modal"
+                          data-target="#deleteModal"
+                          onClick={() =>
+                            this.setState({ studentToDelete: student })
+                          }
                         >
                           Delete
                         </button>

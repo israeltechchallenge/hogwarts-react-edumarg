@@ -42,7 +42,15 @@ class Student extends Component {
     const editStudent = this.props.studentList.find(
       (student) => student.id === studentId
     );
-    this.setState({ student: editStudent });
+    if (!editStudent) {
+      this.props.history.replace("/not-found");
+      return;
+    }
+    this.setState({
+      student: editStudent,
+      currentSkills: editStudent.currentSkills,
+      desierSkills: editStudent.desierSkills,
+    });
   }
 
   handleChange(event) {

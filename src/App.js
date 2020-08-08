@@ -164,23 +164,16 @@ class App extends Component {
 
     localStorage.setItem("adminList", JSON.stringify(newAdmins));
     this.setState({ admins: newAdmins });
-
-    // const now = new Date();
-    // admin.createdOn = now.toDateString();
-    // newAdmins = [admin, ...newAdmins];
-    // mockAdmins = newAdmins;
-    // console.log("new admin", mockAdmins);
-    // this.setState({ admins: newAdmins });
-    // localStorage.setItem("adminList", JSON.stringify(newAdmins));
   }
 
   handleDeleteStudent(studentToDelete) {
-    let newStudents = this.state.students.filter(
-      (student) => student.id !== studentToDelete.id
-    );
-    this.setState({ students: newStudents });
+    console.log("delete");
+    let newStudents = [...this.state.students];
+    const index = newStudents.indexOf(studentToDelete);
+    newStudents.splice(index, 1);
     mockStudents = newStudents;
     localStorage.setItem("studentList", JSON.stringify(newStudents));
+    this.setState({ students: newStudents });
   }
 
   handleSaveStudent(student) {
@@ -214,7 +207,7 @@ class App extends Component {
           <NavBar
             currentAdmin={currentAdmin}
             handleLogOut={() => this.handleLogOut()}
-          />
+          />{" "}
           <Switch>
             <Route
               path="/home"
@@ -226,7 +219,7 @@ class App extends Component {
                   {...props}
                 />
               )}
-            />
+            />{" "}
             <Route
               path="/signup/:id"
               render={(props) => (
@@ -236,7 +229,7 @@ class App extends Component {
                   adminList={admins}
                 />
               )}
-            />
+            />{" "}
             <Route
               path="/login"
               render={(props) => (
@@ -246,7 +239,7 @@ class App extends Component {
                   currentAdmin={currentAdmin}
                 />
               )}
-            />
+            />{" "}
             <Route
               path="/student/:id"
               render={(props) => (
@@ -256,12 +249,12 @@ class App extends Component {
                   onSaveStudent={(student) => this.handleSaveStudent(student)}
                 />
               )}
-            />
-            <Route path="/not-found" component={NotFound} />
+            />{" "}
+            <Route path="/not-found" component={NotFound} />{" "}
             <Redirect from="/" exact to="/home" />
             <Redirect from="/" to="/not-found" />
-          </Switch>
-        </Router>
+          </Switch>{" "}
+        </Router>{" "}
       </React.Fragment>
     );
   }

@@ -15,7 +15,7 @@ const SkillsTable = (props) => {
       <table className="table">
         <thead>
           <tr>
-            <th scope="col-5">Skil</th>
+            <th scope="col-5">Skill</th>
             <th scope="col-5">Level</th>
           </tr>
         </thead>
