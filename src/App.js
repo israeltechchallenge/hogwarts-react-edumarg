@@ -96,33 +96,43 @@ import axios from "axios";
 // },
 // ];
 
-let mockAdmins = [
-  {
-    id: "a1b2c3d4",
-    firstName: "Edu",
-    lastName: "Marg",
-    email: "e@mail.com",
-    createdOn: "",
-    password: "123Abc",
-  },
-];
+// let mockAdmins = [
+//   {
+//     id: "a1b2c3d4",
+//     firstName: "Edu",
+//     lastName: "Marg",
+//     email: "e@mail.com",
+//     createdOn: "",
+//     lastEdit: "",
+//     password: "123Abc",
+//   },
+// ];
 
 class App extends Component {
   state = {
     students: "",
-    admins: mockAdmins,
+    admins: "",
     currentAdmin: "",
   };
 
   async componentDidMount() {
-    const data = await axios.get(`${config.URL}students`);
-    const studentsFromServer = await data.data;
-    console.log(studentsFromServer);
-    this.setState({ students: studentsFromServer });
+    const [studentsData, adminsData] = await Promise.all([
+      axios.get(`${config.URL}students`),
+      axios.get(`${config.URL}admins`),
+    ]);
+    this.setState({
+      students: studentsData.data,
+      admins: adminsData.data,
+    });
     this.getStudents = setInterval(async () => {
-      const data = await axios.get(`${config.URL}students`);
-      const studentsFromServer = await data.data.tweets;
-      this.setState({ students: studentsFromServer });
+      const [studentsData, adminsData] = await Promise.all([
+        axios.get(`${config.URL}students`),
+        axios.get(`${config.URL}admins`),
+      ]);
+      this.setState({
+        students: studentsData.data,
+        admins: adminsData.data,
+      });
     }, 1800000);
   }
 
@@ -136,7 +146,8 @@ class App extends Component {
         admin.email.toLowerCase() === account.email.toLowerCase() &&
         admin.password === account.password
       ) {
-        this.setState({ currentAdmin: admin });
+        this.setState({ currentAdmin: account });
+
         alert("Log In success");
         return;
       }
@@ -146,18 +157,16 @@ class App extends Component {
 
   handleLogOut() {
     this.setState({ currentAdmin: "" });
-    // localStorage.setItem("currentLogedAdmin", JSON.stringify({}));
   }
 
   handleSaveAdmin(admin) {
     const now = new Date();
     let newAdmins = [...this.state.admins];
     let adminInDb = newAdmins.find((a) => a.email === admin.email);
-    console.log(adminInDb);
 
     if (adminInDb) {
       const index = newAdmins.indexOf(adminInDb);
-      console.log(index);
+
       admin.lastEdit = now.toDateString();
       newAdmins[index] = { ...admin };
     } else if (!adminInDb) {
@@ -167,10 +176,7 @@ class App extends Component {
       newAdmins = [admin, ...newAdmins];
     }
 
-    console.log(newAdmins);
-    // localStorage.setItem("adminList", JSON.stringify(newAdmins));
     this.setState({ admins: newAdmins });
-    mockAdmins = newAdmins;
   }
 
   handleDeleteStudent(studentToDelete) {
@@ -180,8 +186,6 @@ class App extends Component {
     newStudents.splice(index, 1);
 
     this.setState({ students: newStudents });
-    // localStorage.setItem("studentList", JSON.stringify(newStudents));
-    // mockStudents = newStudents;
   }
 
   handleSaveStudent(student) {

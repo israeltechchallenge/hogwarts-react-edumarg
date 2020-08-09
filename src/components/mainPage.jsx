@@ -42,7 +42,7 @@ class MainPage extends Component {
               </h6>
               {Boolean(enrolledStudents) && (
                 <div>
-                  <div className="table-responsive">
+                  <div className="table-responsive-lg">
                     <table className="table col">
                       <thead className="thead-dark">
                         <tr>
