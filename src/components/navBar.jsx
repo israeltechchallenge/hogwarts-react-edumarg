@@ -57,7 +57,7 @@ class NavBar extends Component {
             {currentAdmin && (
               <React.Fragment>
                 <span className="navbar-text ml-auto mr-2">Loged In as</span>
-                <Link to={`/signup/${currentAdmin.id}`}>
+                <Link to={`/signup/${currentAdmin.email}`}>
                   {currentAdmin.firstName} {currentAdmin.lastName}
                 </Link>
               </React.Fragment>

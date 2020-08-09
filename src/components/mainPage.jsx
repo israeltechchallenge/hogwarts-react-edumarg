@@ -58,7 +58,7 @@ class MainPage extends Component {
                       </thead>
                       <tbody>
                         {students.map((student) => (
-                          <tr key={student.id}>
+                          <tr key={student.email}>
                             <th scope="row">{students.indexOf(student) + 1}</th>
                             <td>{student.firstName}</td>
                             <td>{student.lastName}</td>

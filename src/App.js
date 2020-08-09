@@ -126,6 +126,10 @@ class App extends Component {
   //   });
   // }
 
+  // componentDidMount() {
+  //   axios.get
+  // }
+
   handleLogin(account) {
     for (let admin of this.state.admins) {
       if (
@@ -149,10 +153,12 @@ class App extends Component {
   handleSaveAdmin(admin) {
     const now = new Date();
     let newAdmins = [...this.state.admins];
-    let adminInDb = newAdmins.find((a) => a.id === admin.id);
+    let adminInDb = newAdmins.find((a) => a.email === admin.email);
+    console.log(adminInDb);
 
     if (adminInDb) {
       const index = newAdmins.indexOf(adminInDb);
+      console.log(index);
       admin.lastEdit = now.toDateString();
       newAdmins[index] = { ...admin };
     } else if (!adminInDb) {
@@ -162,18 +168,18 @@ class App extends Component {
       newAdmins = [admin, ...newAdmins];
     }
 
+    console.log(newAdmins);
     // localStorage.setItem("adminList", JSON.stringify(newAdmins));
     this.setState({ admins: newAdmins });
     mockAdmins = newAdmins;
   }
 
   handleDeleteStudent(studentToDelete) {
-    console.log("delete");
     let newStudents = [...this.state.students];
     const index = newStudents.indexOf(studentToDelete);
-    console.log("index", index);
+
     newStudents.splice(index, 1);
-    console.log("newStudents", newStudents);
+
     this.setState({ students: newStudents });
     // localStorage.setItem("studentList", JSON.stringify(newStudents));
     // mockStudents = newStudents;
@@ -182,25 +188,23 @@ class App extends Component {
   handleSaveStudent(student) {
     const now = new Date();
     let newStudents = [...this.state.students];
-    let studentInDb = newStudents.find((s) => s.id === student.id);
+    let studentInDb = newStudents.find((s) => s.email === student.email);
 
-    if (student.id) {
+    if (studentInDb) {
       const index = newStudents.indexOf(studentInDb);
       student.lastEdit = now.toDateString();
       newStudents[index] = { ...student };
     }
 
     // new student logic
-    else if (!student.id) {
+    else if (!studentInDb) {
       const id = now - new Date("1981-05-20");
       student.id = id.toString();
       student.createdOn = now.toDateString();
       newStudents = [student, ...newStudents];
     }
 
-    // localStorage.setItem("studentList", JSON.stringify(newStudents));
     this.setState({ students: newStudents });
-    // mockStudents = newStudents;
   }
 
   render() {
@@ -225,7 +229,7 @@ class App extends Component {
               )}
             />{" "}
             <Route
-              path="/signup/:id"
+              path="/signup/:email"
               render={(props) => (
                 <SignUp
                   {...props}
@@ -245,7 +249,7 @@ class App extends Component {
               )}
             />{" "}
             <Route
-              path="/student/:id"
+              path="/student/:email"
               render={(props) => (
                 <Student
                   {...props}
