@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import school_shield from "../img/shield_icon.png";
 import MyModal from "./modal";
+import MyChart from "./chart";
 class MainPage extends Component {
   constructor(props) {
     super(props);
@@ -11,13 +12,14 @@ class MainPage extends Component {
     };
   }
   render() {
-    const enrolledStudents = this.state.students.length;
+    const { students, studentToDelete } = this.state;
+    const enrolledStudents = students.length;
     return (
       <React.Fragment>
         <MyModal
           id="deleteModal"
-          onDelete={() => this.props.onDelete(this.state.studentToDelete)}
-          studentToDelete={this.state.studentToDelete}
+          onDelete={() => this.props.onDelete(studentToDelete)}
+          studentToDelete={studentToDelete}
         />
         <div className="col-sm-10 mx-auto">
           {this.props.currentAdmin && (
@@ -38,104 +40,107 @@ class MainPage extends Component {
                   ? `There are currently ${enrolledStudents} enrolled students at Hogwarts`
                   : `Currently there are not students enrroled at Hogwarts`}
               </h6>
-              <div className="table-responsive">
-                <table className="table col">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Email</th>
-                      <th scope="col">Current Skills</th>
-                      <th scope="col">Desier Skills</th>
-                      <th scope="col"></th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {this.state.students.map((student) => (
-                      <tr key={student.id}>
-                        <th scope="row">
-                          {this.state.students.indexOf(student) + 1}
-                        </th>
-                        <td>{student.firstName}</td>
-                        <td>{student.lastName}</td>
-                        <td>{student.email}</td>
-                        <td>
-                          <table className="table">
-                            <thead className="thead-light">
-                              <tr>
-                                <th className="my-0 py-0" scope="col">
-                                  Current Skill
-                                </th>
-                                <th className="my-0 py-0" scope="col">
-                                  Level
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {Object.keys(student.currentSkills).map(
-                                (skill) => (
-                                  <tr key={`current${skill}`}>
-                                    <td>{skill}</td>
-                                    <td>{student.currentSkills[skill]}</td>
+              {Boolean(enrolledStudents) && (
+                <div>
+                  <div className="table-responsive">
+                    <table className="table col">
+                      <thead className="thead-dark">
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">First</th>
+                          <th scope="col">Last</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Current Skills</th>
+                          <th scope="col">Desier Skills</th>
+                          <th scope="col"></th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {students.map((student) => (
+                          <tr key={student.id}>
+                            <th scope="row">{students.indexOf(student) + 1}</th>
+                            <td>{student.firstName}</td>
+                            <td>{student.lastName}</td>
+                            <td>{student.email}</td>
+                            <td>
+                              <table className="table">
+                                <thead className="thead-light">
+                                  <tr>
+                                    <th className="my-0 py-0" scope="col">
+                                      Current Skill
+                                    </th>
+                                    <th className="my-0 py-0" scope="col">
+                                      Level
+                                    </th>
                                   </tr>
-                                )
-                              )}
-                            </tbody>
-                          </table>
-                        </td>
+                                </thead>
+                                <tbody>
+                                  {Object.keys(student.currentSkills).map(
+                                    (skill) => (
+                                      <tr key={`current${skill}`}>
+                                        <td>{skill}</td>
+                                        <td>{student.currentSkills[skill]}</td>
+                                      </tr>
+                                    )
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
 
-                        <td>
-                          {" "}
-                          <table className="table">
-                            <thead className="thead-light">
-                              <tr>
-                                <th className="my-0 py-0" scope="col">
-                                  Desier Skill
-                                </th>
-                                <th className="my-0 py-0" scope="col">
-                                  Level
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {Object.keys(student.desierSkills).map(
-                                (skill) => (
-                                  <tr key={`desier${skill}`}>
-                                    <td>{skill}</td>
-                                    <td>{student.desierSkills[skill]}</td>
+                            <td>
+                              {" "}
+                              <table className="table">
+                                <thead className="thead-light">
+                                  <tr>
+                                    <th className="my-0 py-0" scope="col">
+                                      Desier Skill
+                                    </th>
+                                    <th className="my-0 py-0" scope="col">
+                                      Level
+                                    </th>
                                   </tr>
-                                )
-                              )}
-                            </tbody>
-                          </table>
-                        </td>
-                        <td>
-                          <Link
-                            className="btn btn-sm py-1 btn-warning"
-                            to={`/student/${student.id}`}
-                          >
-                            Edit
-                          </Link>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-sm btn-danger"
-                            data-toggle="modal"
-                            data-target="#deleteModal"
-                            onClick={() =>
-                              this.setState({ studentToDelete: student })
-                            }
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                                </thead>
+                                <tbody>
+                                  {Object.keys(student.desierSkills).map(
+                                    (skill) => (
+                                      <tr key={`desier${skill}`}>
+                                        <td>{skill}</td>
+                                        <td>{student.desierSkills[skill]}</td>
+                                      </tr>
+                                    )
+                                  )}
+                                </tbody>
+                              </table>
+                            </td>
+                            <td>
+                              <Link
+                                className="btn btn-sm py-1 btn-warning"
+                                to={`/student/${student.email}`}
+                              >
+                                Edit
+                              </Link>
+                            </td>
+                            <td>
+                              <button
+                                className="btn btn-sm btn-danger"
+                                data-toggle="modal"
+                                data-target="#deleteModal"
+                                onClick={() =>
+                                  this.setState({ studentToDelete: student })
+                                }
+                              >
+                                Delete
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <MyChart students={students} />
+                </div>
+              )}
             </React.Fragment>
           )}
           {!this.props.currentAdmin && (

@@ -46,8 +46,6 @@ class Student extends Component {
       this.props.history.replace("/not-found");
       return;
     }
-    console.log("current", editStudent.currentSkills);
-    console.log("desier", editStudent.desierSkills);
     this.setState({
       student: editStudent,
       currentSkills: editStudent.currentSkills,

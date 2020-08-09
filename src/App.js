@@ -13,86 +13,86 @@ import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
 
-let mockStudents = [
-  {
-    id: "1a2b3c4e",
-    firstName: "Harry",
-    lastName: "Potter",
-    email: "potter@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "3",
-      spells: "3",
-      quidditch: "5",
-      animagus: "2",
-      apparate: "1",
-      metamorphmagi: "1",
-      parcelongue: "5",
-    },
-    desierSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "5",
-      animagus: "3",
-      apparate: "2",
-      metamorphmagi: "2",
-      parcelongue: "5",
-    },
-  },
-  {
-    id: "5f6g7h8i",
-    firstName: "Hermione",
-    lastName: "Granger",
-    email: "granger@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "1",
-      animagus: "2",
-      apparate: "3",
-      metamorphmagi: "1",
-      parcelongue: "1",
-    },
-    desierSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "1",
-      animagus: "4",
-      apparate: "4",
-      metamorphmagi: "5",
-      parcelongue: "1",
-    },
-  },
-  {
-    id: "1a2b5f6g",
-    firstName: "Ron",
-    lastName: "Weasley",
-    email: "rweasley@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "2",
-      spells: "2",
-      quidditch: "2",
-      animagus: "3",
-      apparate: "3",
-      metamorphmagi: "3",
-      parcelongue: "1",
-    },
-    desierSkills: {
-      potionMaking: "4",
-      spells: "4",
-      quidditch: "5",
-      animagus: "3",
-      apparate: "3",
-      metamorphmagi: "3",
-      parcelongue: "1",
-    },
-  },
-];
+// let mockStudents = [
+//   {
+//     id: "1a2b3c4e",
+//     firstName: "Harry",
+//     lastName: "Potter",
+//     email: "potter@email.com",
+//     createdOn: "",
+//     lastEdit: "",
+//     currentSkills: {
+//       potionMaking: "3",
+//       spells: "3",
+//       quidditch: "5",
+//       animagus: "2",
+//       apparate: "1",
+//       metamorphmagi: "1",
+//       parcelongue: "5",
+//     },
+//     desierSkills: {
+//       potionMaking: "5",
+//       spells: "5",
+//       quidditch: "5",
+//       animagus: "3",
+//       apparate: "2",
+//       metamorphmagi: "2",
+//       parcelongue: "5",
+//     },
+//   },
+//   {
+//     id: "5f6g7h8i",
+//     firstName: "Hermione",
+//     lastName: "Granger",
+//     email: "granger@email.com",
+//     createdOn: "",
+//     lastEdit: "",
+//     currentSkills: {
+//       potionMaking: "5",
+//       spells: "5",
+//       quidditch: "1",
+//       animagus: "2",
+//       apparate: "3",
+//       metamorphmagi: "1",
+//       parcelongue: "1",
+//     },
+//     desierSkills: {
+//       potionMaking: "5",
+//       spells: "5",
+//       quidditch: "1",
+//       animagus: "4",
+//       apparate: "4",
+//       metamorphmagi: "5",
+//       parcelongue: "1",
+//     },
+//   },
+//   {
+//     id: "1a2b5f6g",
+//     firstName: "Ron",
+//     lastName: "Weasley",
+//     email: "rweasley@email.com",
+//     createdOn: "",
+//     lastEdit: "",
+//     currentSkills: {
+//       potionMaking: "2",
+//       spells: "2",
+//       quidditch: "2",
+//       animagus: "3",
+//       apparate: "3",
+//       metamorphmagi: "3",
+//       parcelongue: "1",
+//     },
+//     desierSkills: {
+//       potionMaking: "4",
+//       spells: "4",
+//       quidditch: "5",
+//       animagus: "3",
+//       apparate: "3",
+//       metamorphmagi: "3",
+//       parcelongue: "1",
+//     },
+//   },
+// ];
 
 let mockAdmins = [
   {
@@ -108,23 +108,23 @@ let mockAdmins = [
 class App extends Component {
   state = {
     students: "",
-    admins: "",
+    admins: mockAdmins,
     currentAdmin: "",
   };
 
-  componentWillMount() {
-    let currentAccount = localStorage.getItem("currentLogedAdmin");
-    currentAccount = JSON.parse(currentAccount);
-    let studentList = localStorage.getItem("studentList");
-    studentList = JSON.parse(studentList);
-    let adminList = localStorage.getItem("adminList");
-    adminList = JSON.parse(adminList);
-    this.setState({
-      students: studentList || mockStudents,
-      admins: adminList || mockAdmins,
-      currentAdmin: currentAccount || "",
-    });
-  }
+  // componentDidMount() {
+  //   let currentAccount = localStorage.getItem("currentLogedAdmin");
+  //   currentAccount = JSON.parse(currentAccount);
+  //   let studentList = localStorage.getItem("studentList");
+  //   studentList = JSON.parse(studentList);
+  //   let adminList = localStorage.getItem("adminList");
+  //   adminList = JSON.parse(adminList);
+  //   this.setState({
+  //     students: studentList || mockStudents,
+  //     admins: adminList || mockAdmins,
+  //     currentAdmin: currentAccount || "",
+  //   });
+  // }
 
   handleLogin(account) {
     for (let admin of this.state.admins) {
@@ -133,7 +133,7 @@ class App extends Component {
         admin.password === account.password
       ) {
         this.setState({ currentAdmin: admin });
-        localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
+        // localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
         alert("Log In success");
         return;
       }
@@ -143,11 +143,10 @@ class App extends Component {
 
   handleLogOut() {
     this.setState({ currentAdmin: "" });
-    localStorage.setItem("currentLogedAdmin", JSON.stringify({}));
+    // localStorage.setItem("currentLogedAdmin", JSON.stringify({}));
   }
 
   handleSaveAdmin(admin) {
-    console.log(admin);
     const now = new Date();
     let newAdmins = [...this.state.admins];
     let adminInDb = newAdmins.find((a) => a.id === admin.id);
@@ -163,20 +162,21 @@ class App extends Component {
       newAdmins = [admin, ...newAdmins];
     }
 
-    localStorage.setItem("adminList", JSON.stringify(newAdmins));
+    // localStorage.setItem("adminList", JSON.stringify(newAdmins));
     this.setState({ admins: newAdmins });
-
-    console.log("state admin", this.state.admins);
-    console.log("newAdmins", newAdmins);
+    mockAdmins = newAdmins;
   }
 
   handleDeleteStudent(studentToDelete) {
+    console.log("delete");
     let newStudents = [...this.state.students];
     const index = newStudents.indexOf(studentToDelete);
+    console.log("index", index);
     newStudents.splice(index, 1);
-    mockStudents = newStudents;
-    localStorage.setItem("studentList", JSON.stringify(newStudents));
+    console.log("newStudents", newStudents);
     this.setState({ students: newStudents });
+    // localStorage.setItem("studentList", JSON.stringify(newStudents));
+    // mockStudents = newStudents;
   }
 
   handleSaveStudent(student) {
@@ -198,8 +198,9 @@ class App extends Component {
       newStudents = [student, ...newStudents];
     }
 
-    localStorage.setItem("studentList", JSON.stringify(newStudents));
+    // localStorage.setItem("studentList", JSON.stringify(newStudents));
     this.setState({ students: newStudents });
+    // mockStudents = newStudents;
   }
 
   render() {
