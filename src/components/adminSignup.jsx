@@ -18,10 +18,10 @@ class SignUp extends Component {
   }
 
   componentDidMount() {
-    const admintId = this.props.match.params.id;
-    if (admintId === "new") return;
+    const adminEmail = this.props.match.params.email;
+    if (adminEmail === "new") return;
     const editAdmin = this.props.adminList.find(
-      (admin) => admin.id === admintId
+      (admin) => admin.email === adminEmail
     );
     editAdmin.passwordConfirm = editAdmin.password;
     this.setState({ admin: editAdmin });

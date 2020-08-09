@@ -37,17 +37,15 @@ class Student extends Component {
   }
 
   componentDidMount() {
-    const studentId = this.props.match.params.id;
-    if (studentId === "new") return;
+    const studentEmail = this.props.match.params.email;
+    if (studentEmail === "new") return;
     const editStudent = this.props.studentList.find(
-      (student) => student.id === studentId
+      (student) => student.email === studentEmail
     );
     if (!editStudent) {
       this.props.history.replace("/not-found");
       return;
     }
-    console.log("current", editStudent.currentSkills);
-    console.log("desier", editStudent.desierSkills);
     this.setState({
       student: editStudent,
       currentSkills: editStudent.currentSkills,

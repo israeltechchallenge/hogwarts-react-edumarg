@@ -12,98 +12,101 @@ import LogIn from "./components/adminLogin";
 import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
+import config from "./config.json";
+import axios from "axios";
 
-let mockStudents = [
-  {
-    id: "1a2b3c4e",
-    firstName: "Harry",
-    lastName: "Potter",
-    email: "potter@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "3",
-      spells: "3",
-      quidditch: "5",
-      animagus: "2",
-      apparate: "1",
-      metamorphmagi: "1",
-      parcelongue: "5",
-    },
-    desierSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "5",
-      animagus: "3",
-      apparate: "2",
-      metamorphmagi: "2",
-      parcelongue: "5",
-    },
-  },
-  {
-    id: "5f6g7h8i",
-    firstName: "Hermione",
-    lastName: "Granger",
-    email: "granger@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "1",
-      animagus: "2",
-      apparate: "3",
-      metamorphmagi: "1",
-      parcelongue: "1",
-    },
-    desierSkills: {
-      potionMaking: "5",
-      spells: "5",
-      quidditch: "1",
-      animagus: "4",
-      apparate: "4",
-      metamorphmagi: "5",
-      parcelongue: "1",
-    },
-  },
-  {
-    id: "1a2b5f6g",
-    firstName: "Ron",
-    lastName: "Weasley",
-    email: "rweasley@email.com",
-    createdOn: "",
-    lastEdit: "",
-    currentSkills: {
-      potionMaking: "2",
-      spells: "2",
-      quidditch: "2",
-      animagus: "3",
-      apparate: "3",
-      metamorphmagi: "3",
-      parcelongue: "1",
-    },
-    desierSkills: {
-      potionMaking: "4",
-      spells: "4",
-      quidditch: "5",
-      animagus: "3",
-      apparate: "3",
-      metamorphmagi: "3",
-      parcelongue: "1",
-    },
-  },
-];
+// let mockStudents = [
+// {
+//   id: "1a2b3c4e",
+//   firstName: "Harry",
+//   lastName: "Potter",
+//   email: "potter@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "3",
+//     spells: "3",
+//     quidditch: "5",
+//     animagus: "2",
+//     apparate: "1",
+//     metamorphmagi: "1",
+//     parcelongue: "5",
+//   },
+//   desierSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "5",
+//     animagus: "3",
+//     apparate: "2",
+//     metamorphmagi: "2",
+//     parcelongue: "5",
+//   },
+// },
+// {
+//   id: "5f6g7h8i",
+//   firstName: "Hermione",
+//   lastName: "Granger",
+//   email: "granger@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "1",
+//     animagus: "2",
+//     apparate: "3",
+//     metamorphmagi: "1",
+//     parcelongue: "1",
+//   },
+//   desierSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "1",
+//     animagus: "4",
+//     apparate: "4",
+//     metamorphmagi: "5",
+//     parcelongue: "1",
+//   },
+// },
+// {
+//   id: "1a2b5f6g",
+//   firstName: "Ron",
+//   lastName: "Weasley",
+//   email: "rweasley@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "2",
+//     spells: "2",
+//     quidditch: "2",
+//     animagus: "3",
+//     apparate: "3",
+//     metamorphmagi: "3",
+//     parcelongue: "1",
+//   },
+//   desierSkills: {
+//     potionMaking: "4",
+//     spells: "4",
+//     quidditch: "5",
+//     animagus: "3",
+//     apparate: "3",
+//     metamorphmagi: "3",
+//     parcelongue: "1",
+//   },
+// },
+// ];
 
-let mockAdmins = [
-  {
-    id: "a1b2c3d4",
-    firstName: "Edu",
-    lastName: "Marg",
-    email: "e@mail.com",
-    createdOn: "",
-    password: "123Abc",
-  },
-];
+// let mockAdmins = [
+//   {
+//     id: "a1b2c3d4",
+//     firstName: "Edu",
+//     lastName: "Marg",
+//     email: "e@mail.com",
+//     createdOn: "",
+//     lastEdit: "",
+//     password: "123Abc",
+//   },
+// ];
 
 class App extends Component {
   state = {
@@ -112,18 +115,29 @@ class App extends Component {
     currentAdmin: "",
   };
 
-  componentWillMount() {
-    let currentAccount = localStorage.getItem("currentLogedAdmin");
-    currentAccount = JSON.parse(currentAccount);
-    let studentList = localStorage.getItem("studentList");
-    studentList = JSON.parse(studentList);
-    let adminList = localStorage.getItem("adminList");
-    adminList = JSON.parse(adminList);
+  async componentDidMount() {
+    const [studentsData, adminsData] = await Promise.all([
+      axios.get(`${config.URL}students`),
+      axios.get(`${config.URL}admins`),
+    ]);
     this.setState({
-      students: studentList || mockStudents,
-      admins: adminList || mockAdmins,
-      currentAdmin: currentAccount || "",
+      students: studentsData.data,
+      admins: adminsData.data,
     });
+    this.getStudents = setInterval(async () => {
+      const [studentsData, adminsData] = await Promise.all([
+        axios.get(`${config.URL}students`),
+        axios.get(`${config.URL}admins`),
+      ]);
+      this.setState({
+        students: studentsData.data,
+        admins: adminsData.data,
+      });
+    }, 1800000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.getTwitts);
   }
 
   handleLogin(account) {
@@ -132,8 +146,8 @@ class App extends Component {
         admin.email.toLowerCase() === account.email.toLowerCase() &&
         admin.password === account.password
       ) {
-        this.setState({ currentAdmin: admin });
-        localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
+        this.setState({ currentAdmin: account });
+
         alert("Log In success");
         return;
       }
@@ -143,17 +157,16 @@ class App extends Component {
 
   handleLogOut() {
     this.setState({ currentAdmin: "" });
-    localStorage.setItem("currentLogedAdmin", JSON.stringify({}));
   }
 
   handleSaveAdmin(admin) {
-    console.log(admin);
     const now = new Date();
     let newAdmins = [...this.state.admins];
-    let adminInDb = newAdmins.find((a) => a.id === admin.id);
+    let adminInDb = newAdmins.find((a) => a.email === admin.email);
 
     if (adminInDb) {
       const index = newAdmins.indexOf(adminInDb);
+
       admin.lastEdit = now.toDateString();
       newAdmins[index] = { ...admin };
     } else if (!adminInDb) {
@@ -163,42 +176,37 @@ class App extends Component {
       newAdmins = [admin, ...newAdmins];
     }
 
-    localStorage.setItem("adminList", JSON.stringify(newAdmins));
     this.setState({ admins: newAdmins });
-
-    console.log("state admin", this.state.admins);
-    console.log("newAdmins", newAdmins);
   }
 
   handleDeleteStudent(studentToDelete) {
     let newStudents = [...this.state.students];
     const index = newStudents.indexOf(studentToDelete);
+
     newStudents.splice(index, 1);
-    mockStudents = newStudents;
-    localStorage.setItem("studentList", JSON.stringify(newStudents));
+
     this.setState({ students: newStudents });
   }
 
   handleSaveStudent(student) {
     const now = new Date();
     let newStudents = [...this.state.students];
-    let studentInDb = newStudents.find((s) => s.id === student.id);
+    let studentInDb = newStudents.find((s) => s.email === student.email);
 
-    if (student.id) {
+    if (studentInDb) {
       const index = newStudents.indexOf(studentInDb);
       student.lastEdit = now.toDateString();
       newStudents[index] = { ...student };
     }
 
     // new student logic
-    else if (!student.id) {
+    else if (!studentInDb) {
       const id = now - new Date("1981-05-20");
       student.id = id.toString();
       student.createdOn = now.toDateString();
       newStudents = [student, ...newStudents];
     }
 
-    localStorage.setItem("studentList", JSON.stringify(newStudents));
     this.setState({ students: newStudents });
   }
 
@@ -224,7 +232,7 @@ class App extends Component {
               )}
             />{" "}
             <Route
-              path="/signup/:id"
+              path="/signup/:email"
               render={(props) => (
                 <SignUp
                   {...props}
@@ -244,7 +252,7 @@ class App extends Component {
               )}
             />{" "}
             <Route
-              path="/student/:id"
+              path="/student/:email"
               render={(props) => (
                 <Student
                   {...props}
