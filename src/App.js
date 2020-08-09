@@ -12,86 +12,88 @@ import LogIn from "./components/adminLogin";
 import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
+import config from "./config.json";
+import axios from "axios";
 
 // let mockStudents = [
-//   {
-//     id: "1a2b3c4e",
-//     firstName: "Harry",
-//     lastName: "Potter",
-//     email: "potter@email.com",
-//     createdOn: "",
-//     lastEdit: "",
-//     currentSkills: {
-//       potionMaking: "3",
-//       spells: "3",
-//       quidditch: "5",
-//       animagus: "2",
-//       apparate: "1",
-//       metamorphmagi: "1",
-//       parcelongue: "5",
-//     },
-//     desierSkills: {
-//       potionMaking: "5",
-//       spells: "5",
-//       quidditch: "5",
-//       animagus: "3",
-//       apparate: "2",
-//       metamorphmagi: "2",
-//       parcelongue: "5",
-//     },
+// {
+//   id: "1a2b3c4e",
+//   firstName: "Harry",
+//   lastName: "Potter",
+//   email: "potter@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "3",
+//     spells: "3",
+//     quidditch: "5",
+//     animagus: "2",
+//     apparate: "1",
+//     metamorphmagi: "1",
+//     parcelongue: "5",
 //   },
-//   {
-//     id: "5f6g7h8i",
-//     firstName: "Hermione",
-//     lastName: "Granger",
-//     email: "granger@email.com",
-//     createdOn: "",
-//     lastEdit: "",
-//     currentSkills: {
-//       potionMaking: "5",
-//       spells: "5",
-//       quidditch: "1",
-//       animagus: "2",
-//       apparate: "3",
-//       metamorphmagi: "1",
-//       parcelongue: "1",
-//     },
-//     desierSkills: {
-//       potionMaking: "5",
-//       spells: "5",
-//       quidditch: "1",
-//       animagus: "4",
-//       apparate: "4",
-//       metamorphmagi: "5",
-//       parcelongue: "1",
-//     },
+//   desierSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "5",
+//     animagus: "3",
+//     apparate: "2",
+//     metamorphmagi: "2",
+//     parcelongue: "5",
 //   },
-//   {
-//     id: "1a2b5f6g",
-//     firstName: "Ron",
-//     lastName: "Weasley",
-//     email: "rweasley@email.com",
-//     createdOn: "",
-//     lastEdit: "",
-//     currentSkills: {
-//       potionMaking: "2",
-//       spells: "2",
-//       quidditch: "2",
-//       animagus: "3",
-//       apparate: "3",
-//       metamorphmagi: "3",
-//       parcelongue: "1",
-//     },
-//     desierSkills: {
-//       potionMaking: "4",
-//       spells: "4",
-//       quidditch: "5",
-//       animagus: "3",
-//       apparate: "3",
-//       metamorphmagi: "3",
-//       parcelongue: "1",
-//     },
+// },
+// {
+//   id: "5f6g7h8i",
+//   firstName: "Hermione",
+//   lastName: "Granger",
+//   email: "granger@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "1",
+//     animagus: "2",
+//     apparate: "3",
+//     metamorphmagi: "1",
+//     parcelongue: "1",
 //   },
+//   desierSkills: {
+//     potionMaking: "5",
+//     spells: "5",
+//     quidditch: "1",
+//     animagus: "4",
+//     apparate: "4",
+//     metamorphmagi: "5",
+//     parcelongue: "1",
+//   },
+// },
+// {
+//   id: "1a2b5f6g",
+//   firstName: "Ron",
+//   lastName: "Weasley",
+//   email: "rweasley@email.com",
+//   createdOn: "",
+//   lastEdit: "",
+//   currentSkills: {
+//     potionMaking: "2",
+//     spells: "2",
+//     quidditch: "2",
+//     animagus: "3",
+//     apparate: "3",
+//     metamorphmagi: "3",
+//     parcelongue: "1",
+//   },
+//   desierSkills: {
+//     potionMaking: "4",
+//     spells: "4",
+//     quidditch: "5",
+//     animagus: "3",
+//     apparate: "3",
+//     metamorphmagi: "3",
+//     parcelongue: "1",
+//   },
+// },
 // ];
 
 let mockAdmins = [
@@ -112,23 +114,21 @@ class App extends Component {
     currentAdmin: "",
   };
 
-  // componentDidMount() {
-  //   let currentAccount = localStorage.getItem("currentLogedAdmin");
-  //   currentAccount = JSON.parse(currentAccount);
-  //   let studentList = localStorage.getItem("studentList");
-  //   studentList = JSON.parse(studentList);
-  //   let adminList = localStorage.getItem("adminList");
-  //   adminList = JSON.parse(adminList);
-  //   this.setState({
-  //     students: studentList || mockStudents,
-  //     admins: adminList || mockAdmins,
-  //     currentAdmin: currentAccount || "",
-  //   });
-  // }
+  async componentDidMount() {
+    const data = await axios.get(`${config.URL}students`);
+    const studentsFromServer = await data.data;
+    console.log(studentsFromServer);
+    this.setState({ students: studentsFromServer });
+    this.getStudents = setInterval(async () => {
+      const data = await axios.get(`${config.URL}students`);
+      const studentsFromServer = await data.data.tweets;
+      this.setState({ students: studentsFromServer });
+    }, 1800000);
+  }
 
-  // componentDidMount() {
-  //   axios.get
-  // }
+  componentWillUnmount() {
+    clearInterval(this.getTwitts);
+  }
 
   handleLogin(account) {
     for (let admin of this.state.admins) {
@@ -137,7 +137,6 @@ class App extends Component {
         admin.password === account.password
       ) {
         this.setState({ currentAdmin: admin });
-        // localStorage.setItem("currentLogedAdmin", JSON.stringify(admin));
         alert("Log In success");
         return;
       }
