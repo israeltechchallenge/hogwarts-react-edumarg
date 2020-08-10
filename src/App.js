@@ -15,98 +15,12 @@ import NotFound from "./components/notFound";
 import config from "./config.json";
 import axios from "axios";
 
-// let mockStudents = [
-// {
-//   id: "1a2b3c4e",
-//   firstName: "Harry",
-//   lastName: "Potter",
-//   email: "potter@email.com",
-//   createdOn: "",
-//   lastEdit: "",
-//   currentSkills: {
-//     potionMaking: "3",
-//     spells: "3",
-//     quidditch: "5",
-//     animagus: "2",
-//     apparate: "1",
-//     metamorphmagi: "1",
-//     parcelongue: "5",
-//   },
-//   desierSkills: {
-//     potionMaking: "5",
-//     spells: "5",
-//     quidditch: "5",
-//     animagus: "3",
-//     apparate: "2",
-//     metamorphmagi: "2",
-//     parcelongue: "5",
-//   },
-// },
-// {
-//   id: "5f6g7h8i",
-//   firstName: "Hermione",
-//   lastName: "Granger",
-//   email: "granger@email.com",
-//   createdOn: "",
-//   lastEdit: "",
-//   currentSkills: {
-//     potionMaking: "5",
-//     spells: "5",
-//     quidditch: "1",
-//     animagus: "2",
-//     apparate: "3",
-//     metamorphmagi: "1",
-//     parcelongue: "1",
-//   },
-//   desierSkills: {
-//     potionMaking: "5",
-//     spells: "5",
-//     quidditch: "1",
-//     animagus: "4",
-//     apparate: "4",
-//     metamorphmagi: "5",
-//     parcelongue: "1",
-//   },
-// },
-// {
-//   id: "1a2b5f6g",
-//   firstName: "Ron",
-//   lastName: "Weasley",
-//   email: "rweasley@email.com",
-//   createdOn: "",
-//   lastEdit: "",
-//   currentSkills: {
-//     potionMaking: "2",
-//     spells: "2",
-//     quidditch: "2",
-//     animagus: "3",
-//     apparate: "3",
-//     metamorphmagi: "3",
-//     parcelongue: "1",
-//   },
-//   desierSkills: {
-//     potionMaking: "4",
-//     spells: "4",
-//     quidditch: "5",
-//     animagus: "3",
-//     apparate: "3",
-//     metamorphmagi: "3",
-//     parcelongue: "1",
-//   },
-// },
-// ];
-
-// let mockAdmins = [
-//   {
-//     id: "a1b2c3d4",
-//     firstName: "Edu",
-//     lastName: "Marg",
-//     email: "e@mail.com",
-//     createdOn: "",
-//     lastEdit: "",
-//     password: "123Abc",
-//   },
-// ];
+axios.interceptors.response.use(null, (error) => {
+  if (!error.response) {
+    alert(`Unexpected Error, please try again`);
+  }
+  return Promise.reject(error);
+});
 
 class App extends Component {
   state = {
@@ -115,14 +29,19 @@ class App extends Component {
     currentAdmin: "",
   };
 
+  sorteList(list) {
+    const listSorted = list.sort((a, b) => b.lastEdit - a.lastEdit);
+    return listSorted;
+  }
+
   async componentDidMount() {
     const [studentsData, adminsData] = await Promise.all([
       axios.get(`${config.URL}students`),
       axios.get(`${config.URL}admins`),
     ]);
     this.setState({
-      students: studentsData.data,
-      admins: adminsData.data,
+      students: studentsData.data || {},
+      admins: adminsData.data || {},
     });
     this.getStudents = setInterval(async () => {
       const [studentsData, adminsData] = await Promise.all([
@@ -166,26 +85,33 @@ class App extends Component {
 
     if (adminInDb) {
       const index = newAdmins.indexOf(adminInDb);
-
       admin.lastEdit = now.toDateString();
       newAdmins[index] = { ...admin };
+      axios.put(`${config.URL}admins/{admin.email}`, admin);
     } else if (!adminInDb) {
       const id = now - new Date("1981-05-20");
       admin.id = id.toString();
       admin.createdOn = now.toDateString();
+      admin.lastEdit = now.toDateString();
       newAdmins = [admin, ...newAdmins];
+      axios.post(`${config.URL}admins/new`);
     }
 
-    this.setState({ admins: newAdmins });
+    const newAdminsSorted = this.sorteList(newAdmins);
+    this.setState({ admins: newAdminsSorted });
   }
 
   handleDeleteStudent(studentToDelete) {
+    console.log("studentToDelete", studentToDelete);
     let newStudents = [...this.state.students];
     const index = newStudents.indexOf(studentToDelete);
-
+    console.log("index", index);
     newStudents.splice(index, 1);
-
-    this.setState({ students: newStudents });
+    console.log("after splice", newStudents);
+    const newStudentsSorted = this.sorteList(newStudents);
+    this.setState({ students: newStudentsSorted });
+    axios.delete(`${config.URL}students/${studentToDelete.email}`);
+    console.log("state", this.state.students);
   }
 
   handleSaveStudent(student) {
@@ -197,6 +123,7 @@ class App extends Component {
       const index = newStudents.indexOf(studentInDb);
       student.lastEdit = now.toDateString();
       newStudents[index] = { ...student };
+      axios.put(`${config.URL}students/${student.email}`);
     }
 
     // new student logic
@@ -205,9 +132,11 @@ class App extends Component {
       student.id = id.toString();
       student.createdOn = now.toDateString();
       newStudents = [student, ...newStudents];
+      axios.post(`${config.URL}students/new`);
     }
 
-    this.setState({ students: newStudents });
+    const newStudentsSorted = this.sorteList(newStudents);
+    this.setState({ students: newStudentsSorted });
   }
 
   render() {
@@ -256,7 +185,7 @@ class App extends Component {
               render={(props) => (
                 <Student
                   {...props}
-                  studentList={students}
+                  // studentList={students}
                   onSaveStudent={(student) => this.handleSaveStudent(student)}
                 />
               )}

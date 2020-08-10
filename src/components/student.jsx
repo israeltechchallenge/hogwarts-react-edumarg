@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import SkillsTable from "./skillsTable";
 import { validate, validateProperty } from "../common/validation";
+import config from "../config.json";
+import axios from "axios";
+
+axios.interceptors.response.use(null, (error) => {
+  if (!error.response) {
+    alert(`Unexpected Error, please try again`);
+  }
+  return Promise.reject(error);
+});
 
 class Student extends Component {
   constructor(props) {
@@ -36,20 +45,24 @@ class Student extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const studentEmail = this.props.match.params.email;
     if (studentEmail === "new") return;
-    const editStudent = this.props.studentList.find(
-      (student) => student.email === studentEmail
+    const editStudent = await axios.get(
+      `${config.URL}/students/${studentEmail}`
     );
-    if (!editStudent) {
+    console.log("editStudent", editStudent.data);
+    // const editStudent = this.props.studentList.find(
+    //   (student) => student.email === studentEmail
+    // );
+    if (!editStudent.data) {
       this.props.history.replace("/not-found");
       return;
     }
     this.setState({
-      student: editStudent,
-      currentSkills: editStudent.currentSkills,
-      desierSkills: editStudent.desierSkills,
+      student: editStudent.data,
+      currentSkills: editStudent.data.currentSkills,
+      desierSkills: editStudent.data.desierSkills,
     });
   }
 
