@@ -34,17 +34,15 @@ export function validate(data) {
             }
         }
         if (property === "password") {
-            if (data[property].trim() === "")
-                error[property] = `Password Name requiere`;
+            if (data[property].trim() === "") error[property] = `Password requiere`;
             const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,16}$/;
             if (!regex.test(data[property]))
                 error[property] =
-                " Password must be at least 4 characters, no more than 8 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
+                " Password must be at least 6 characters, no more than 16 characters, and must include at least one upper case letter, one lower case letter, and one numeric digit.";
         }
 
         if (property === "passwordConfirm") {
-            if (data[property].trim() === "")
-                error[property] = `Password Name requiere`;
+            if (data[property].trim() === "") error[property] = `Password requiere`;
             if (data.password !== data[property])
                 error[
                     property

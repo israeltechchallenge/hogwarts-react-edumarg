@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import school_shield from "../img/shield_icon.png";
 import MyModal from "./modal";
-import MyChart from "./chart";
 class MainPage extends Component {
   constructor(props) {
     super(props);
@@ -11,8 +10,10 @@ class MainPage extends Component {
       studentToDelete: "",
     };
   }
+
   render() {
     const { students, studentToDelete } = this.state;
+    console.log("students in list", students);
     const enrolledStudents = students.length;
     return (
       <React.Fragment>
@@ -41,104 +42,101 @@ class MainPage extends Component {
                   : `Currently there are not students enrroled at Hogwarts`}
               </h6>
               {Boolean(enrolledStudents) && (
-                <div>
-                  <div className="table-responsive-lg">
-                    <table className="table col">
-                      <thead className="thead-dark">
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">First</th>
-                          <th scope="col">Last</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Current Skills</th>
-                          <th scope="col">Desier Skills</th>
-                          <th scope="col"></th>
-                          <th scope="col"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {students.map((student) => (
-                          <tr key={student.email}>
-                            <th scope="row">{students.indexOf(student) + 1}</th>
-                            <td>{student.firstName}</td>
-                            <td>{student.lastName}</td>
-                            <td>{student.email}</td>
-                            <td>
-                              <table className="table">
-                                <thead className="thead-light">
-                                  <tr>
-                                    <th className="my-0 py-0" scope="col">
-                                      Current Skill
-                                    </th>
-                                    <th className="my-0 py-0" scope="col">
-                                      Level
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {Object.keys(student.currentSkills).map(
-                                    (skill) => (
-                                      <tr key={`current${skill}`}>
-                                        <td>{skill}</td>
-                                        <td>{student.currentSkills[skill]}</td>
-                                      </tr>
-                                    )
-                                  )}
-                                </tbody>
-                              </table>
-                            </td>
+                <div className="table-responsive-lg">
+                  <table className="table col">
+                    <thead className="thead-dark">
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">First</th>
+                        <th scope="col">Last</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Current Skills</th>
+                        <th scope="col">Desier Skills</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {students.map((student) => (
+                        <tr key={student.email}>
+                          <th scope="row">{students.indexOf(student) + 1}</th>
+                          <td>{student.firstName}</td>
+                          <td>{student.lastName}</td>
+                          <td>{student.email}</td>
+                          <td>
+                            <table className="table">
+                              <thead className="thead-light">
+                                <tr>
+                                  <th className="my-0 py-0" scope="col">
+                                    Current Skill
+                                  </th>
+                                  <th className="my-0 py-0" scope="col">
+                                    Level
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.keys(student.currentSkills).map(
+                                  (skill) => (
+                                    <tr key={`current${skill}`}>
+                                      <td>{skill}</td>
+                                      <td>{student.currentSkills[skill]}</td>
+                                    </tr>
+                                  )
+                                )}
+                              </tbody>
+                            </table>
+                          </td>
 
-                            <td>
-                              {" "}
-                              <table className="table">
-                                <thead className="thead-light">
-                                  <tr>
-                                    <th className="my-0 py-0" scope="col">
-                                      Desier Skill
-                                    </th>
-                                    <th className="my-0 py-0" scope="col">
-                                      Level
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {Object.keys(student.desierSkills).map(
-                                    (skill) => (
-                                      <tr key={`desier${skill}`}>
-                                        <td>{skill}</td>
-                                        <td>{student.desierSkills[skill]}</td>
-                                      </tr>
-                                    )
-                                  )}
-                                </tbody>
-                              </table>
-                            </td>
-                            <td>
-                              <Link
-                                className="btn btn-sm py-1 btn-warning"
-                                to={`/student/${student.email}`}
-                              >
-                                Edit
-                              </Link>
-                            </td>
-                            <td>
-                              <button
-                                className="btn btn-sm btn-danger"
-                                data-toggle="modal"
-                                data-target="#deleteModal"
-                                onClick={() =>
-                                  this.setState({ studentToDelete: student })
-                                }
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  <MyChart students={students} />
+                          <td>
+                            {" "}
+                            <table className="table">
+                              <thead className="thead-light">
+                                <tr>
+                                  <th className="my-0 py-0" scope="col">
+                                    Desier Skill
+                                  </th>
+                                  <th className="my-0 py-0" scope="col">
+                                    Level
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {Object.keys(student.desireSkills).map(
+                                  (skill) => (
+                                    <tr key={`desier${skill}`}>
+                                      <td>{skill}</td>
+                                      <td>{student.desireSkills[skill]}</td>
+                                    </tr>
+                                  )
+                                )}
+                              </tbody>
+                            </table>
+                          </td>
+                          <td>
+                            <Link
+                              className="btn btn-sm py-1 btn-warning"
+                              to={`/student/${student.email}`}
+                            >
+                              Edit
+                            </Link>
+                          </td>
+                          <td>
+                            <button
+                              className="btn btn-sm btn-danger"
+                              data-toggle="modal"
+                              data-target="#deleteModal"
+                              onClick={() =>
+                                this.setState({ studentToDelete: student })
+                              }
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               )}
             </React.Fragment>

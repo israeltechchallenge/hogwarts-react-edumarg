@@ -12,15 +12,11 @@ import LogIn from "./components/adminLogin";
 import SignUp from "./components/adminSignup";
 import Student from "./components/student";
 import NotFound from "./components/notFound";
+import MyDashboard from "./components/dashboad";
 import config from "./config.json";
-import axios from "axios";
-
-axios.interceptors.response.use(null, (error) => {
-  if (!error.response) {
-    alert(`Unexpected Error, please try again`);
-  }
-  return Promise.reject(error);
-});
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import http from "./common/axiosCommands";
 
 class App extends Component {
   state = {
@@ -36,17 +32,18 @@ class App extends Component {
 
   async componentDidMount() {
     const [studentsData, adminsData] = await Promise.all([
-      axios.get(`${config.URL}students`),
-      axios.get(`${config.URL}admins`),
+      http.get(`${config.URL}students`),
+
+      http.get(`${config.URL}admins`),
     ]);
     this.setState({
-      students: studentsData.data || {},
-      admins: adminsData.data || {},
+      students: studentsData.data || [],
+      admins: adminsData.data || [],
     });
     this.getStudents = setInterval(async () => {
       const [studentsData, adminsData] = await Promise.all([
-        axios.get(`${config.URL}students`),
-        axios.get(`${config.URL}admins`),
+        http.get(`${config.URL}students`),
+        http.get(`${config.URL}admins`),
       ]);
       this.setState({
         students: studentsData.data,
@@ -65,84 +62,100 @@ class App extends Component {
         admin.email.toLowerCase() === account.email.toLowerCase() &&
         admin.password === account.password
       ) {
-        this.setState({ currentAdmin: account });
-
-        alert("Log In success");
+        this.setState({ currentAdmin: admin });
+        toast.success("Log In success");
         return;
       }
     }
-    alert("login fail");
+    toast.error("login fail");
   }
 
   handleLogOut() {
     this.setState({ currentAdmin: "" });
   }
 
-  handleSaveAdmin(admin) {
-    const now = new Date();
+  async handleSaveAdmin(admin) {
     let newAdmins = [...this.state.admins];
-    let adminInDb = newAdmins.find((a) => a.email === admin.email);
+    let adminInDb = newAdmins.find(
+      (a) => a.email === admin.email && a._id === admin._id
+    );
 
     if (adminInDb) {
       const index = newAdmins.indexOf(adminInDb);
-      admin.lastEdit = now.toDateString();
       newAdmins[index] = { ...admin };
-      axios.put(`${config.URL}admins/{admin.email}`, admin);
+      http.put(`${config.URL}admins/{admin.email}`, admin);
     } else if (!adminInDb) {
-      const id = now - new Date("1981-05-20");
-      admin.id = id.toString();
-      admin.createdOn = now.toDateString();
-      admin.lastEdit = now.toDateString();
       newAdmins = [admin, ...newAdmins];
-      axios.post(`${config.URL}admins/new`);
+      http.post(`${config.URL}admins/new`);
     }
 
     const newAdminsSorted = this.sorteList(newAdmins);
     this.setState({ admins: newAdminsSorted });
   }
 
-  handleDeleteStudent(studentToDelete) {
-    console.log("studentToDelete", studentToDelete);
-    let newStudents = [...this.state.students];
-    const index = newStudents.indexOf(studentToDelete);
-    console.log("index", index);
-    newStudents.splice(index, 1);
-    console.log("after splice", newStudents);
-    const newStudentsSorted = this.sorteList(newStudents);
-    this.setState({ students: newStudentsSorted });
-    axios.delete(`${config.URL}students/${studentToDelete.email}`);
-    console.log("state", this.state.students);
-  }
-
   handleSaveStudent(student) {
-    const now = new Date();
     let newStudents = [...this.state.students];
-    let studentInDb = newStudents.find((s) => s.email === student.email);
+    let studentInDb = newStudents.find(
+      (s) => s.email === student.email && s._id === student._id
+    );
 
     if (studentInDb) {
       const index = newStudents.indexOf(studentInDb);
-      student.lastEdit = now.toDateString();
       newStudents[index] = { ...student };
-      axios.put(`${config.URL}students/${student.email}`);
+      const newStudentsSorted = this.sorteList(newStudents);
+      this.setState({ students: newStudentsSorted });
+
+      try {
+        http.put(`${config.URL}students/${student.email}`, student);
+      } catch (exeption) {
+        toast.error("Error editing this student");
+        this.setState({ students: newStudents });
+      }
     }
 
     // new student logic
     else if (!studentInDb) {
-      const id = now - new Date("1981-05-20");
-      student.id = id.toString();
-      student.createdOn = now.toDateString();
       newStudents = [student, ...newStudents];
-      axios.post(`${config.URL}students/new`);
+      const newStudentsSorted = this.sorteList(newStudents);
+      this.setState({ students: newStudentsSorted });
+      try {
+        http.post(`${config.URL}students/new`);
+      } catch (exeption) {
+        toast.error("Error saving this student");
+        this.setState({ students: newStudents });
+      }
     }
+  }
 
-    const newStudentsSorted = this.sorteList(newStudents);
-    this.setState({ students: newStudentsSorted });
+  async handleDeleteStudent(studentToDelete) {
+    const originalStudents = [...this.state.students];
+    this.setState({ students: "" });
+    let newStudents = originalStudents.filter(
+      (student) => student._id !== studentToDelete._id
+    );
+    console.log("new students", newStudents);
+    this.setState({ students: newStudents });
+    // this.setState((prevState) => ({
+    //   students: prevState.students.filter(
+    //     (student) => student._id !== studentToDelete._id
+    //   ),
+    // }));
+
+    try {
+      http.delete(`${config.URL}students/${studentToDelete.email}`);
+    } catch (exeption) {
+      toast.error("Error deleting this student");
+      this.setState({ students: originalStudents });
+    }
   }
 
   render() {
     const { currentAdmin, students, admins } = this.state;
+    console.log("App rendered");
+
     return (
       <React.Fragment>
+        <ToastContainer />
         <Router>
           <NavBar
             currentAdmin={currentAdmin}
@@ -185,11 +198,16 @@ class App extends Component {
               render={(props) => (
                 <Student
                   {...props}
-                  // studentList={students}
                   onSaveStudent={(student) => this.handleSaveStudent(student)}
                 />
               )}
-            />{" "}
+            />
+            <Route
+              path="/dashboard"
+              render={(props) => (
+                <MyDashboard {...props} studentList={students} />
+              )}
+            />
             <Route path="/not-found" component={NotFound} />{" "}
             <Redirect from="/" exact to="/home" />
             <Redirect from="/" to="/not-found" />
