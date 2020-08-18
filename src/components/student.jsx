@@ -1,18 +1,20 @@
 import React, { Component } from "react";
 import SkillsTable from "./skillsTable";
 import { validate, validateProperty } from "../common/validation";
+import config from "../config.json";
+import http from "../common/axiosCommands";
 
 class Student extends Component {
   constructor(props) {
     super(props);
     this.state = {
       student: {
-        id: "",
+        _id: "",
         firstName: "",
         lastName: "",
         email: "",
         currentSkills: {},
-        desierSkills: {},
+        desireSkills: {},
       },
       currentSkills: {
         potionMaking: 1,
@@ -21,35 +23,35 @@ class Student extends Component {
         animagus: 1,
         apparate: 1,
         metamorphmagi: 1,
-        parcelongue: 1,
+        parselongue: 1,
       },
-      desierSkills: {
+      desireSkills: {
         potionMaking: 1,
         spells: 1,
         quidditch: 1,
         animagus: 1,
         apparate: 1,
         metamorphmagi: 1,
-        parcelongue: 1,
+        parselongue: 1,
       },
       errors: {},
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const studentEmail = this.props.match.params.email;
     if (studentEmail === "new") return;
-    const editStudent = this.props.studentList.find(
-      (student) => student.email === studentEmail
+    const editStudent = await http.get(
+      `${config.URL}/students/${studentEmail}`
     );
-    if (!editStudent) {
+    if (!editStudent.data) {
       this.props.history.replace("/not-found");
       return;
     }
     this.setState({
-      student: editStudent,
-      currentSkills: editStudent.currentSkills,
-      desierSkills: editStudent.desierSkills,
+      student: editStudent.data,
+      currentSkills: editStudent.data.currentSkills,
+      desireSkills: editStudent.data.desireSkills,
     });
   }
 
@@ -74,9 +76,9 @@ class Student extends Component {
       this.setState({
         currentSkills: newSkills,
       });
-    else if (skills === "desierSkills")
+    else if (skills === "desireSkills")
       this.setState({
-        desierSkills: newSkills,
+        desireSkills: newSkills,
       });
   }
 
@@ -89,7 +91,7 @@ class Student extends Component {
 
     let newStudent = { ...this.state.student };
     newStudent.currentSkills = this.state.currentSkills;
-    newStudent.desierSkills = this.state.desierSkills;
+    newStudent.desireSkills = this.state.desireSkills;
 
     this.props.onSaveStudent(newStudent);
     event.target.reset();
@@ -176,9 +178,9 @@ class Student extends Component {
                 <SkillsTable
                   type="desier"
                   onChange={(event) =>
-                    this.handleOnChangeSkills(event, "desierSkills")
+                    this.handleOnChangeSkills(event, "desireSkills")
                   }
-                  data={this.state.desierSkills}
+                  data={this.state.desireSkills}
                 />
               </div>
             </div>

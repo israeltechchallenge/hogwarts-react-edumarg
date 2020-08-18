@@ -9,6 +9,7 @@ class NavBar extends Component {
 
   render() {
     const { currentAdmin } = this.props;
+
     return (
       <React.Fragment>
         <nav className="navbar navbar-expand-md navbar-dark bg-dark mb-3">
@@ -33,6 +34,13 @@ class NavBar extends Component {
                   Add student
                 </NavLink>
               )}
+
+              {currentAdmin && (
+                <NavLink className="nav-item nav-link" to="/dashboard">
+                  Dashboard
+                </NavLink>
+              )}
+
               {!currentAdmin && (
                 <NavLink className="nav-item nav-link" to="/login">
                   Log In
