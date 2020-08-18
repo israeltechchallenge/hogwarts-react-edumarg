@@ -4,13 +4,12 @@ import StudentsByDate from "./searchDate";
 import StudentsBySkills from "./searchBySkill";
 
 const MyDashBoard = (props) => {
-  console.log("props students dash", props.studentList);
   return (
     <React.Fragment>
       <MyChart studentList={props.studentList} />
       <StudentsByDate />
-      <StudentsBySkills type={"Current"} />
-      <StudentsBySkills type={"Desire"} />
+      <StudentsBySkills type={"current"} />
+      <StudentsBySkills type={"desire"} />
     </React.Fragment>
   );
 };

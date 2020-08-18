@@ -23,7 +23,7 @@ class Student extends Component {
         animagus: 1,
         apparate: 1,
         metamorphmagi: 1,
-        parcelongue: 1,
+        parselongue: 1,
       },
       desireSkills: {
         potionMaking: 1,
@@ -32,7 +32,7 @@ class Student extends Component {
         animagus: 1,
         apparate: 1,
         metamorphmagi: 1,
-        parcelongue: 1,
+        parselongue: 1,
       },
       errors: {},
     };
