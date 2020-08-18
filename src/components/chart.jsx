@@ -4,7 +4,6 @@ const CanvasJS = CanvasJSReact.CanvasJS;
 const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const MyChart = (props) => {
-  console.log(props.students);
   let totalStudents = props.studentList.length;
   const totalSkills = {};
   const chartData = [];
@@ -18,16 +17,12 @@ const MyChart = (props) => {
     }
   }
 
-  console.log("totalSkills", totalSkills, "totalStudents", totalStudents);
-
   for (const [skill, value] of Object.entries(totalSkills)) {
     let data = {};
     data["y"] = (totalSkills[skill] / totalStudents) * 100;
     data["label"] = skill;
     chartData.push(data);
   }
-
-  console.log("chart data", chartData);
 
   const options = {
     exportEnabled: true,
@@ -37,7 +32,7 @@ const MyChart = (props) => {
     },
     data: [
       {
-        type: "pie",
+        type: "doughnut",
         startAngle: 75,
         toolTipContent: "<b>{label}</b>: {y}%",
         showInLegend: "true",
