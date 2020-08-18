@@ -1,5 +1,7 @@
 import React from "react";
-import CanvasJSReact, { CanvasJS, CanvasJSChart } from "../canvasjs.react";
+import CanvasJSReact from "../canvasjs.react";
+const CanvasJS = CanvasJSReact.CanvasJS;
+const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const MyChart = (props) => {
   console.log(props.students);
@@ -22,38 +24,34 @@ const MyChart = (props) => {
     let data = {};
     data["y"] = (totalSkills[skill] / totalStudents) * 100;
     data["label"] = skill;
-    chartData.append(data);
+    chartData.push(data);
   }
 
-  // for (const [skill, value] of Object.entries(totalSkills)) {
-  //   chartData[skill] = (totalSkills[skill] / totalStudents) * 100;
-  // }
+  console.log("chart data", chartData);
 
-  console.log("chartData", chartData);
-
-  // const options = {
-  //   exportEnabled: true,
-  //   animationEnabled: true,
-  //   title: {
-  //     text: "Website Traffic Sources",
-  //   },
-  //   data: [
-  //     {
-  //       type: "pie",
-  //       startAngle: 75,
-  //       toolTipContent: "<b>{label}</b>: {y}%",
-  //       showInLegend: "true",
-  //       legendText: "{label}",
-  //       indexLabelFontSize: 16,
-  //       indexLabel: "{label} - {y}%",
-  //       dataPoints: [],
-  //     },
-  //   ],
-  // };
+  const options = {
+    exportEnabled: true,
+    animationEnabled: true,
+    title: {
+      text: "Desire Skills by Popularity",
+    },
+    data: [
+      {
+        type: "pie",
+        startAngle: 75,
+        toolTipContent: "<b>{label}</b>: {y}%",
+        showInLegend: "true",
+        legendText: "{label}",
+        indexLabelFontSize: 16,
+        indexLabel: "{label} - {y}%",
+        dataPoints: chartData,
+      },
+    ],
+  };
 
   return (
     <React.Fragment>
-      <h1>Desire Skills by Popularity</h1>
+      <CanvasJSChart options={options} />
     </React.Fragment>
   );
 };
